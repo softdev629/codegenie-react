@@ -1,10 +1,11 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
+import AdminHeader from "./AdminHeader";
 
-const Layout = () => {
+const Layout = (props: { type: "admin" | "user" }) => {
   return (
     <>
-      <Header />
+      {props.type === "admin" ? <AdminHeader /> : <Header />}
       <Outlet />
     </>
   );

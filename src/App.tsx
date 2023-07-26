@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Layout from "./components/Layout";
 import { getDesignTokens, ColorModeContext } from "./theme";
 import AnyCodePage from "./pages/anycode.page";
+import ProductConfigurator from "./pages/admin/product.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -28,8 +29,13 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Layout type="user" />}>
               <Route path="anycode" element={<AnyCodePage />} />
+            </Route>
+            <Route path="/admin" element={<Layout type="admin" />}>
+              <Route path="configure">
+                <Route path="product" element={<ProductConfigurator />} />
+              </Route>
             </Route>
           </Routes>
         </ThemeProvider>

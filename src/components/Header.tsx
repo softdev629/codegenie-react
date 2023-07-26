@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  AppBar,
   Box,
   Toolbar,
   IconButton,
@@ -103,10 +102,7 @@ function Header() {
   };
 
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundImage: "none", boxShadow: "none" }}
-    >
+    <>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <SvgIcon
@@ -234,7 +230,7 @@ function Header() {
         </Toolbar>
       </Container>
       <Divider />
-    </AppBar>
+    </>
   );
 }
 export default Header;

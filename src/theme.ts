@@ -9,8 +9,8 @@ export const getDesignTokens = (mode: PaletteMode) => ({
     ...(mode === "light"
       ? {
           primary: {
-            main: "#F9FBFC",
-            dark: "#F8FBFF",
+            main: "#4BA5EB",
+            contrastText: "#fff",
           },
           text: {
             primary: "#475569",
@@ -18,17 +18,17 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           },
           background: {
             default: "#F9FBFC",
+            paper: "#F8FBFF",
           },
           divider: "#E3E3E3",
         }
       : {
           primary: {
-            main: "#131825",
-            light: "#1C212E",
+            main: "#4BA5EB",
           },
           background: {
             default: "#131825",
-            paper: "#131825",
+            paper: "#1C212E",
           },
           text: {
             primary: "#CBCBCB",

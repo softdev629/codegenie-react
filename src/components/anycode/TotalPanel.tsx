@@ -26,10 +26,7 @@ function TabPanel(props: TabPanelProps) {
         <Box
           sx={(theme) => ({
             p: 3,
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? theme.palette.primary.light
-                : theme.palette.primary.dark,
+            backgroundColor: theme.palette.background.paper,
             height: "100%",
           })}
         >
@@ -106,7 +103,7 @@ export default function TotalPanel() {
           overflow: "visible",
           backgroundColor:
             theme.palette.mode === "dark"
-              ? theme.palette.primary.main
+              ? theme.palette.background.default
               : "white",
           ".MuiTabs-indicator": {
             visibility: "hidden",
@@ -118,6 +115,7 @@ export default function TotalPanel() {
       >
         {panels.map((panel, index) => (
           <Tab
+            key={`result_panel_${index}`}
             sx={(theme) => ({
               textTransform: "none",
               alignItems: "flex-start",
@@ -127,13 +125,8 @@ export default function TotalPanel() {
               borderBottom: "1px solid",
               borderColor: "divider",
               "&.Mui-selected": {
-                color: "#4BA5EB",
                 borderLeft: "3px solid",
-                borderColor: "#4BA5EB",
-                backgroundColor:
-                  theme.palette.mode === "dark"
-                    ? theme.palette.primary.light
-                    : theme.palette.primary.dark,
+                backgroundColor: theme.palette.background.paper,
               },
               "&.Mui-selected::after": {
                 overflow: "visible",
@@ -143,10 +136,7 @@ export default function TotalPanel() {
                 width: 10,
                 height: "100%",
                 zIndex: 101,
-                backgroundColor:
-                  theme.palette.mode === "dark"
-                    ? theme.palette.primary.light
-                    : theme.palette.primary.dark,
+                backgroundColor: theme.palette.background.paper,
               },
             })}
             label={panel.text}
@@ -155,7 +145,7 @@ export default function TotalPanel() {
         ))}
       </Tabs>
       {panels.map((panel, index) => (
-        <TabPanel value={value} index={index}>
+        <TabPanel value={value} index={index} key={`panel_show_${index}`}>
           {panel.element}
         </TabPanel>
       ))}

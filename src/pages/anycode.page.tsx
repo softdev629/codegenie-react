@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Container,
   Link,
@@ -9,6 +10,8 @@ import {
   Button,
   SvgIcon,
   Box,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
@@ -93,6 +96,7 @@ const CodeBox = styled(Box)(({ theme }) => ({
 }));
 
 const AnyCodePage = () => {
+  const [value, setValue] = useState(0);
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit">
       Home
@@ -101,6 +105,7 @@ const AnyCodePage = () => {
       Any Code
     </Typography>,
   ];
+
   return (
     <Container maxWidth="xl" sx={{ height: "calc(100vh - 100px)" }}>
       <Stack height="100%">
@@ -114,24 +119,33 @@ const AnyCodePage = () => {
         <Grid container flexGrow={1}>
           <Grid item xs={5} paddingTop={5} paddingRight={2}>
             <Stack spacing={3} height="100%">
-              <Stack direction="row" spacing={2}>
+              <Tabs
+                onChange={(e: React.SyntheticEvent, newValue: number) =>
+                  setValue(newValue)
+                }
+                value={value}
+                sx={{
+                  "& .MuiTabs-scroller .MuiTabs-flexContainer": { gap: 2 },
+                }}
+              >
                 {loadTypes.map((type, index) => (
-                  <Button
+                  <Tab
                     key={`loadtype_${index}`}
-                    variant="contained"
+                    // variant="outlined"
                     sx={{
-                      boxShadow: "none",
                       flex: 1,
-                      border: "1px solid #73737388",
                       justifyContent: "left",
                       padding: "8px 16px",
+                      border: "1px solid",
+                      borderColor: "inherit",
+                      borderRadius: 1,
                     }}
-                    startIcon={type.icon}
-                  >
-                    {type.text}
-                  </Button>
+                    iconPosition="start"
+                    icon={type.icon}
+                    label={type.text}
+                  />
                 ))}
-              </Stack>
+              </Tabs>
               <Typography variant="h4" color="text.secondary">
                 Current Code
               </Typography>
