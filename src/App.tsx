@@ -8,6 +8,8 @@ import Layout from "./components/Layout";
 import { getDesignTokens, ColorModeContext } from "./theme";
 import AnyCodePage from "./pages/anycode.page";
 import ProductConfigurator from "./pages/admin/product.page";
+import PriceConfigurator from "./pages/admin/price.page";
+import PromptConfigurator from "./pages/admin/prompt.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -35,6 +37,8 @@ function App() {
             <Route path="/admin" element={<Layout type="admin" />}>
               <Route path="configure">
                 <Route path="product" element={<ProductConfigurator />} />
+                <Route path="prompt" element={<PromptConfigurator />} />
+                <Route path="price" element={<PriceConfigurator />} />
               </Route>
             </Route>
           </Routes>

@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
-import { configApi } from "./api/configApi";
+import { productApi } from "./api/productApi";
 
 export const store = configureStore({
   reducer: {
-    [configApi.reducerPath]: configApi.reducer,
+    [productApi.reducerPath]: productApi.reducer,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([configApi.middleware]),
+    getDefaultMiddleware({}).concat([productApi.middleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

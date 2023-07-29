@@ -4,8 +4,8 @@ import { IGenericResponse, IProduct } from "./types";
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
 
-export const configApi = createApi({
-  reducerPath: "configApi",
+export const productApi = createApi({
+  reducerPath: "productApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${BASE_URL}/api/config/`,
   }),
@@ -20,7 +20,7 @@ export const configApi = createApi({
       transformResponse: (results: { data: IProduct }) => results.data,
       providesTags: [{ type: "Product", id: "LIST" }],
     }),
-    configProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
+    updateProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
       query(data) {
         return {
           url: "product",
@@ -33,4 +33,4 @@ export const configApi = createApi({
   }),
 });
 
-export const { useConfigProductMutation, useGetProductQuery } = configApi;
+export const { useUpdateProductMutation, useGetProductQuery } = productApi;
