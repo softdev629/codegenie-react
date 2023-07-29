@@ -27,20 +27,20 @@ const pages = [
   },
   {
     text: "Price Configurator",
-    link: "/configure/price",
+    link: "/config/prices",
   },
 
   {
     text: "API Configurator",
-    link: "/configure/api",
+    link: "/config/api",
   },
   {
     text: "Prompt Configurator",
-    link: "/configure/prompt",
+    link: "/config/prompts",
   },
   {
     text: "Product Configurator",
-    link: "/configure/product",
+    link: "/config/products",
   },
 ];
 

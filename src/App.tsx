@@ -3,6 +3,9 @@ import { CssBaseline } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import { PaletteMode } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 import Layout from "./components/Layout";
 import { getDesignTokens, ColorModeContext } from "./theme";
@@ -29,16 +32,17 @@ function App() {
     <>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
+          <ToastContainer />
           <CssBaseline />
           <Routes>
             <Route path="/" element={<Layout type="user" />}>
               <Route path="anycode" element={<AnyCodePage />} />
             </Route>
             <Route path="/admin" element={<Layout type="admin" />}>
-              <Route path="configure">
-                <Route path="product" element={<ProductConfigurator />} />
-                <Route path="prompt" element={<PromptConfigurator />} />
-                <Route path="price" element={<PriceConfigurator />} />
+              <Route path="config">
+                <Route path="products" element={<ProductConfigurator />} />
+                <Route path="prompts" element={<PromptConfigurator />} />
+                <Route path="prices" element={<PriceConfigurator />} />
               </Route>
             </Route>
           </Routes>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Typography,
@@ -7,10 +7,8 @@ import {
   Stack,
   TextField,
   SvgIcon,
-  InputAdornment,
   Button,
   Grid,
-  MenuItem,
   Checkbox,
   Autocomplete,
 } from "@mui/material";
@@ -24,72 +22,65 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
+import axios from "axios";
 
-import { ReactComponent as SearchIcon } from "../../assets/ico_search.svg";
-import { useUpdateProductMutation } from "../../redux/api/productApi";
+import {
+  useLazyGetProductQuery,
+  useSearchProductQuery,
+  useUpdateProductMutation,
+} from "../../redux/api/productApi";
+import { useNavigate } from "react-router-dom";
+import { IProductHeadings } from "../../redux/api/types";
 
 const saveSchema = object({
   product_name: string().min(1, "Product name is required"),
-  product_module: string().min(1, "Product module is required"),
+  product_module: string(),
   module_description: string(),
-  source_check: array(string()),
-  source_text: string().min(1, "Text Source Label can't be empty"),
-  source_image: string().min(1, "Image Source Label can't be empty"),
-  source_url: string().min(1, "Url Source Label can't be empty"),
-  input_box_title: string().min(1, "Input Box Label is required"),
+  source_check: array(string()).optional(),
+  source_text: string(),
+  source_image: string(),
+  source_url: string(),
+  input_box_title: string(),
   input_box_description: string(),
-  export_check: array(string()),
-  export_word: string().min(1, "Word Export Label can't be empty"),
-  export_pdf: string().min(1, "PDF Export Label can't be empty"),
-  export_text: string().min(1, "Text Export Label can't be empty"),
+  export_check: array(string()).optional(),
+  export_word: string(),
+  export_pdf: string(),
+  export_text: string(),
 });
 
 export type ProductSettingSaveInput = TypeOf<typeof saveSchema>;
 
 const ProductConfigurator = () => {
-  // const [open, setOpen] = useState(false);
-  // const [options, setOptions] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  const [checkedSources, setCheckedSources] = useState([
-    "source_text",
-    "source_image",
-    "source_url",
-  ]);
-  const [checkedExports, setCheckedExports] = useState([
-    "export_word",
-    "export_pdf",
-    "export_text",
-  ]);
+  const [options, setOptions] = useState<IProductHeadings[]>([]);
+  const [checkedSources, setCheckedSources] = useState<string[]>([]);
+  const [checkedExports, setCheckedExports] = useState<string[]>([]);
+  const [filter, setFilter] = useState<IProductHeadings | null>(null);
+
+  const navigate = useNavigate();
 
   const methods = useForm<ProductSettingSaveInput>({
     resolver: zodResolver(saveSchema),
-    defaultValues: {
-      source_check: ["source_text", "source_image", "source_url"],
-      source_text: "Text",
-      source_image: "Image",
-      source_url: "URL",
-      export_check: ["export_word", "export_pdf", "export_text"],
-      export_word: "MS Word",
-      export_pdf: "PDF",
-      export_text: "Text",
-    },
+    defaultValues: {},
   });
 
   const [updateProduct, updateState] = useUpdateProductMutation();
+  const searchState = useSearchProductQuery("");
+  const [getProduct, getState] = useLazyGetProductQuery();
 
   const {
     handleSubmit,
     reset,
     register,
-    getValues,
     setValue,
     control,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = methods;
 
   useEffect(() => {
-    if (updateState.isSuccess)
-      toast.success("Product settings saved successfully");
+    if (updateState.isSuccess) {
+      toast.success("Product saved successfully");
+      console.log("success");
+    }
     if (updateState.isError) {
       console.log(updateState.error);
     }
@@ -99,6 +90,27 @@ const ProductConfigurator = () => {
     updateState.isError,
     updateState.error,
   ]);
+
+  useEffect(() => {
+    if (searchState.data) setOptions(searchState.data);
+  }, [searchState.isLoading, searchState.isFetching]);
+
+  useEffect(() => {
+    const { data } = getState;
+    setValue("product_name", data?.product_name as string);
+    setValue("product_module", data?.product_module as string);
+    setValue("module_description", data?.module_description as string);
+    setValue("source_text", data?.source_text as string);
+    setValue("source_image", data?.source_image as string);
+    setValue("source_url", data?.source_url as string);
+    setValue("input_box_title", data?.input_box_title as string);
+    setValue("input_box_description", data?.input_box_description as string);
+    setValue("export_word", data?.export_word as string);
+    setValue("export_pdf", data?.export_pdf as string);
+    setValue("export_text", data?.export_text as string);
+    setCheckedSources(data?.source_check ? data.source_check : []);
+    setCheckedExports(data?.export_check ? data.export_check : []);
+  }, [getState.isLoading, getState.isFetching]);
 
   const onSubmitHandler: SubmitHandler<ProductSettingSaveInput> = (
     values: ProductSettingSaveInput
@@ -111,6 +123,9 @@ const ProductConfigurator = () => {
     const newNames = checkedValues.includes(checkedName)
       ? checkedValues?.filter((name) => name !== checkedName)
       : [...(checkedValues ?? []), checkedName];
+    checkedName.includes("source")
+      ? setValue("source_check", newNames)
+      : setValue("export_check", newNames);
     checkedName.includes("source")
       ? setCheckedSources(newNames)
       : setCheckedExports(newNames);
@@ -138,7 +153,72 @@ const ProductConfigurator = () => {
       <Container>
         <Stack marginTop={5} spacing={2}>
           <Stack alignItems="end">
-            {/* <Autocomplete id="search-bar" /> */}
+            <Autocomplete
+              options={options}
+              noOptionsText="No Products"
+              sx={{ width: 216 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search Products"
+                  fullWidth
+                  size="small"
+                />
+              )}
+              getOptionLabel={(option) =>
+                `${option.product_name} : ${option.product_module}`
+              }
+              renderOption={(props, option) => {
+                return (
+                  <li {...props}>
+                    {option.product_name} : {option.product_module}
+                  </li>
+                );
+              }}
+              value={filter}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setFilter(newValue);
+                  // axios
+                  //   .get(
+                  //     `${process.env.REACT_APP_SERVER_ENDPOINT}/api/products?product_name=${newValue.product_name}&product_module=${newValue.product_module}`
+                  //   )
+                  //   .then((res) => {
+                  //     const { data } = res.data;
+                  //     setValue("product_name", data?.product_name as string);
+                  //     setValue(
+                  //       "product_module",
+                  //       data?.product_module as string
+                  //     );
+                  //     setValue(
+                  //       "module_description",
+                  //       data?.module_description as string
+                  //     );
+                  //     setValue("source_text", data?.source_text as string);
+                  //     setValue("source_image", data?.source_image as string);
+                  //     setValue("source_url", data?.source_url as string);
+                  //     setValue(
+                  //       "input_box_title",
+                  //       data?.input_box_title as string
+                  //     );
+                  //     setValue(
+                  //       "input_box_description",
+                  //       data?.input_box_description as string
+                  //     );
+                  //     setValue("export_word", data?.export_word as string);
+                  //     setValue("export_pdf", data?.export_pdf as string);
+                  //     setValue("export_text", data?.export_text as string);
+                  //     setCheckedSources(
+                  //       data?.source_check ? data.source_check : []
+                  //     );
+                  //     setCheckedExports(
+                  //       data?.export_check ? data.export_check : []
+                  //     );
+                  //   });
+                  getProduct(newValue);
+                }
+              }}
+            />
           </Stack>
           <FormProvider {...methods}>
             <Box
@@ -247,14 +327,15 @@ const ProductConfigurator = () => {
                           error={!!errors["source_text"]}
                           helperText={errors["source_text"]?.message}
                           size="small"
+                          placeholder="Text"
                         />
                         <Controller
                           render={() => (
                             <Checkbox
                               checked={checkedSources.includes("source_text")}
-                              onChange={() =>
-                                handleSelect(checkedSources, "source_text")
-                              }
+                              onChange={() => {
+                                handleSelect(checkedSources, "source_text");
+                              }}
                             />
                           )}
                           control={control}
@@ -267,14 +348,15 @@ const ProductConfigurator = () => {
                           error={!!errors["source_image"]}
                           helperText={errors["source_image"]?.message}
                           size="small"
+                          placeholder="Image"
                         />
                         <Controller
                           render={() => (
                             <Checkbox
                               checked={checkedSources.includes("source_image")}
-                              onChange={() =>
-                                handleSelect(checkedSources, "source_image")
-                              }
+                              onChange={() => {
+                                handleSelect(checkedSources, "source_image");
+                              }}
                             />
                           )}
                           control={control}
@@ -287,14 +369,15 @@ const ProductConfigurator = () => {
                           error={!!errors["source_url"]}
                           helperText={errors["source_url"]?.message}
                           size="small"
+                          placeholder="URL"
                         />
                         <Controller
                           render={() => (
                             <Checkbox
                               checked={checkedSources.includes("source_url")}
-                              onChange={() =>
-                                handleSelect(checkedSources, "source_url")
-                              }
+                              onChange={() => {
+                                handleSelect(checkedSources, "source_url");
+                              }}
                             />
                           )}
                           control={control}
@@ -349,6 +432,7 @@ const ProductConfigurator = () => {
                           error={!!errors["export_word"]}
                           helperText={errors["export_word"]?.message}
                           size="small"
+                          placeholder="MS Word"
                         />
                         <Controller
                           render={() => (
@@ -369,6 +453,7 @@ const ProductConfigurator = () => {
                           error={!!errors["export_pdf"]}
                           helperText={errors["export_pdf"]?.message}
                           size="small"
+                          placeholder="PDF"
                         />
                         <Controller
                           render={() => (
@@ -389,6 +474,7 @@ const ProductConfigurator = () => {
                           size="small"
                           error={!!errors["export_text"]}
                           helperText={errors["export_text"]?.message}
+                          placeholder="Text"
                         />
                         <Controller
                           render={() => (
@@ -409,6 +495,22 @@ const ProductConfigurator = () => {
               </Stack>
             </Box>
           </FormProvider>
+          <Stack alignItems="end" gap={2}>
+            <Button
+              variant="contained"
+              sx={{ paddingY: 1 }}
+              onClick={() => navigate("/admin/config/prompts")}
+            >
+              Add Features & Prompts
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ paddingY: 1 }}
+              onClick={() => navigate("/admin/config/prices")}
+            >
+              Add Pricing
+            </Button>
+          </Stack>
         </Stack>
       </Container>
     </>

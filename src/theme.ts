@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { PaletteMode } from "@mui/material";
+import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -37,4 +38,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           divider: "#737373",
         }),
   },
+  typography: {
+    button: {
+      textTransform: "none",
+    },
+  } as TypographyOptions,
 });

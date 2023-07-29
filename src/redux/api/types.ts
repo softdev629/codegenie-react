@@ -3,31 +3,23 @@ export interface IGenericResponse {
   message: string;
 }
 
-export interface ISourceLabel {
-  text: string;
-  checked: boolean;
-}
-
-export interface IInputBox {
-  label: string;
-  description: string;
-}
-
-export interface IExportOptions {
-  text: string;
-  checked: boolean;
-}
-
-export interface IProductModule {
-  name: string;
-  description: string;
-  source_labels: ISourceLabel[];
-  input_box: IInputBox;
-  export_options: IExportOptions[];
-}
-
 export interface IProduct {
-  type: string;
-  name: string;
-  modules: IProductModule[];
+  product_name: string;
+  product_module: string;
+  module_description: string;
+  source_check: string[];
+  source_text: string;
+  source_image: string;
+  source_url: string;
+  input_box_title: string;
+  input_box_description: string;
+  export_check: string[];
+  export_word: string;
+  export_pdf: string;
+  export_text: string;
+}
+
+export interface IProductHeadings {
+  product_name: string;
+  product_module: string;
 }

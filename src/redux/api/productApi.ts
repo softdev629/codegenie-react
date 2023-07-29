@@ -1,20 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ProductSettingSaveInput } from "../../pages/admin/product.page";
-import { IGenericResponse, IProduct } from "./types";
+import { IGenericResponse, IProduct, IProductHeadings } from "./types";
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
 
 export const productApi = createApi({
   reducerPath: "productApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/config/`,
+    baseUrl: `${BASE_URL}/api/products/`,
   }),
   tagTypes: ["Product"],
   endpoints: (builder) => ({
-    getProduct: builder.query<IProduct, void>({
-      query() {
+    getProduct: builder.query<IProduct, IProductHeadings>({
+      query({ product_name, product_module }) {
         return {
-          url: "product",
+          url: `?product_name=${product_name}&product_module=${product_module}`,
         };
       },
       transformResponse: (results: { data: IProduct }) => results.data,
@@ -23,14 +23,27 @@ export const productApi = createApi({
     updateProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
       query(data) {
         return {
-          url: "product",
-          method: "PATCH",
+          url: "",
+          method: "POST",
           body: data,
         };
       },
       invalidatesTags: [{ type: "Product", id: "LIST" }],
     }),
+    searchProduct: builder.query<IProductHeadings[], string>({
+      query(searchKey: string) {
+        return {
+          url: `search?search_key=${searchKey}`,
+        };
+      },
+      transformResponse: (results: { data: IProductHeadings[] }) =>
+        results.data,
+    }),
   }),
 });
 
-export const { useUpdateProductMutation, useGetProductQuery } = productApi;
+export const {
+  useUpdateProductMutation,
+  useLazyGetProductQuery,
+  useSearchProductQuery,
+} = productApi;
