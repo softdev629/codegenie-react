@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -6,7 +6,6 @@ import {
   Container,
   Stack,
   TextField,
-  SvgIcon,
   Button,
   Grid,
   Checkbox,
@@ -22,7 +21,6 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 import {
   useLazyGetProductQuery,
@@ -33,19 +31,19 @@ import { useNavigate } from "react-router-dom";
 import { IProductHeadings } from "../../redux/api/types";
 
 const saveSchema = object({
-  product_name: string().min(1, "Product name is required"),
-  product_module: string(),
-  module_description: string(),
+  product_name: string().min(1, "Product name is required").optional(),
+  product_module: string().optional(),
+  module_description: string().optional(),
   source_check: array(string()).optional(),
-  source_text: string(),
-  source_image: string(),
-  source_url: string(),
-  input_box_title: string(),
-  input_box_description: string(),
+  source_text: string().optional(),
+  source_image: string().optional(),
+  source_url: string().optional(),
+  input_box_title: string().optional(),
+  input_box_description: string().optional(),
   export_check: array(string()).optional(),
-  export_word: string(),
-  export_pdf: string(),
-  export_text: string(),
+  export_word: string().optional(),
+  export_pdf: string().optional(),
+  export_text: string().optional(),
 });
 
 export type ProductSettingSaveInput = TypeOf<typeof saveSchema>;
@@ -84,16 +82,11 @@ const ProductConfigurator = () => {
     if (updateState.isError) {
       console.log(updateState.error);
     }
-  }, [
-    updateState.isLoading,
-    updateState.isSuccess,
-    updateState.isError,
-    updateState.error,
-  ]);
+  }, [updateState]);
 
   useEffect(() => {
     if (searchState.data) setOptions(searchState.data);
-  }, [searchState.isLoading, searchState.isFetching]);
+  }, [searchState]);
 
   useEffect(() => {
     const { data } = getState;
@@ -110,12 +103,11 @@ const ProductConfigurator = () => {
     setValue("export_text", data?.export_text as string);
     setCheckedSources(data?.source_check ? data.source_check : []);
     setCheckedExports(data?.export_check ? data.export_check : []);
-  }, [getState.isLoading, getState.isFetching]);
+  }, [getState, setValue]);
 
   const onSubmitHandler: SubmitHandler<ProductSettingSaveInput> = (
     values: ProductSettingSaveInput
   ) => {
-    console.log(values);
     updateProduct(values);
   };
 
@@ -179,42 +171,6 @@ const ProductConfigurator = () => {
               onChange={(event, newValue) => {
                 if (newValue) {
                   setFilter(newValue);
-                  // axios
-                  //   .get(
-                  //     `${process.env.REACT_APP_SERVER_ENDPOINT}/api/products?product_name=${newValue.product_name}&product_module=${newValue.product_module}`
-                  //   )
-                  //   .then((res) => {
-                  //     const { data } = res.data;
-                  //     setValue("product_name", data?.product_name as string);
-                  //     setValue(
-                  //       "product_module",
-                  //       data?.product_module as string
-                  //     );
-                  //     setValue(
-                  //       "module_description",
-                  //       data?.module_description as string
-                  //     );
-                  //     setValue("source_text", data?.source_text as string);
-                  //     setValue("source_image", data?.source_image as string);
-                  //     setValue("source_url", data?.source_url as string);
-                  //     setValue(
-                  //       "input_box_title",
-                  //       data?.input_box_title as string
-                  //     );
-                  //     setValue(
-                  //       "input_box_description",
-                  //       data?.input_box_description as string
-                  //     );
-                  //     setValue("export_word", data?.export_word as string);
-                  //     setValue("export_pdf", data?.export_pdf as string);
-                  //     setValue("export_text", data?.export_text as string);
-                  //     setCheckedSources(
-                  //       data?.source_check ? data.source_check : []
-                  //     );
-                  //     setCheckedExports(
-                  //       data?.export_check ? data.export_check : []
-                  //     );
-                  //   });
                   getProduct(newValue);
                 }
               }}
@@ -243,7 +199,9 @@ const ProductConfigurator = () => {
                     <Button
                       variant="outlined"
                       sx={{ width: 152, paddingY: 1 }}
-                      onClick={() => reset()}
+                      onClick={() => {
+                        reset();
+                      }}
                     >
                       New
                     </Button>

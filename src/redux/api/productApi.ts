@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ProductSettingSaveInput } from "../../pages/admin/product.page";
+import { PriceSettingSaveInput } from "../../pages/admin/price.page";
 import { IGenericResponse, IProduct, IProductHeadings } from "./types";
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
@@ -39,6 +40,15 @@ export const productApi = createApi({
       transformResponse: (results: { data: IProductHeadings[] }) =>
         results.data,
     }),
+    updatePrice: builder.mutation<IGenericResponse, PriceSettingSaveInput>({
+      query(data) {
+        return {
+          url: "update_price",
+          method: "PATCH",
+          body: data,
+        };
+      },
+    }),
   }),
 });
 
@@ -46,4 +56,5 @@ export const {
   useUpdateProductMutation,
   useLazyGetProductQuery,
   useSearchProductQuery,
+  useUpdatePriceMutation,
 } = productApi;
