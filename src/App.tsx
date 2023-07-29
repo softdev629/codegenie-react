@@ -13,6 +13,7 @@ import AnyCodePage from "./pages/anycode.page";
 import ProductConfigurator from "./pages/admin/product.page";
 import PriceConfigurator from "./pages/admin/price.page";
 import PromptConfigurator from "./pages/admin/prompt.page";
+import Dashboard from "./pages/admin/dashboard.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -39,6 +40,7 @@ function App() {
               <Route path="anycode" element={<AnyCodePage />} />
             </Route>
             <Route path="/admin" element={<Layout type="admin" />}>
+              <Route path="dashboard" element={<Dashboard />} />
               <Route path="config">
                 <Route path="products" element={<ProductConfigurator />} />
                 <Route path="prompts" element={<PromptConfigurator />} />
