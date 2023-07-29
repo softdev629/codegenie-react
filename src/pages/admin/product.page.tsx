@@ -11,8 +11,6 @@ import {
   Button,
   Grid,
   MenuItem,
-  // Backdrop,
-  // CircularProgress,
   Checkbox,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -22,23 +20,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 
 import { ReactComponent as SearchIcon } from "../../assets/ico_search.svg";
-import {
-  useConfigProductMutation,
-  // useGetProductQuery,
-} from "../../redux/api/configApi";
+import { useConfigProductMutation } from "../../redux/api/configApi";
 import FormInput from "../../components/FormInput";
-
-const modules = [
-  { value: "anycode", label: "Any Code" },
-  {
-    value: "smartcon",
-    label: "Smart Contract",
-  },
-  {
-    value: "apidoc",
-    label: "API Documentation",
-  },
-];
 
 const saveSchema = object({
   name: string().min(1, "Product name is required"),
@@ -61,8 +44,6 @@ const ProductConfigurator = () => {
 
   const [configProduct, configState] = useConfigProductMutation();
 
-  // const { isLoading, data } = useGetProductQuery();
-
   const { handleSubmit } = methods;
 
   useEffect(() => {
@@ -79,18 +60,9 @@ const ProductConfigurator = () => {
   ]);
 
   const onSubmitHandler: SubmitHandler<ProductSettingSaveInput> = (values) => {
+    console.log("asf");
     configProduct(values);
   };
-
-  // if (isLoading)
-  //   return (
-  //     <Backdrop
-  //       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-  //       open={true}
-  //     >
-  //       <CircularProgress color="inherit" />
-  //     </Backdrop>
-  //   );
 
   return (
     <>
@@ -135,7 +107,7 @@ const ProductConfigurator = () => {
               borderRadius={1}
               component="form"
               onSubmit={handleSubmit(onSubmitHandler)}
-              noValidate
+              // noValidate
             >
               <Stack spacing={5}>
                 <Stack flexDirection="row">
@@ -173,7 +145,7 @@ const ProductConfigurator = () => {
                   </Grid>
                   <Grid item xs={10}>
                     <FormInput
-                      sx={{ width: "30%" }}
+                      sx={{ width: 350 }}
                       name="name"
                       variant="outlined"
                       defaultValue="CodeGenie"
@@ -197,20 +169,7 @@ const ProductConfigurator = () => {
                     display="flex"
                     flexDirection="column"
                   >
-                    <TextField
-                      defaultValue="anycode"
-                      sx={{ width: "30%" }}
-                      select
-                    >
-                      {modules.map((module, index) => (
-                        <MenuItem
-                          key={`moudle_item_${index}`}
-                          value={module.value}
-                        >
-                          {module.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    <TextField defaultValue="Any Code" sx={{ width: 350 }} />
                     <TextField placeholder="Write Product module description here. " />
                   </Grid>
                 </Grid>
@@ -265,16 +224,8 @@ const ProductConfigurator = () => {
                   </Grid>
                   <Grid item xs={10}>
                     <Stack flexDirection="row" gap={1}>
-                      <FormInput
-                        name="input_box_title"
-                        defaultValue="Current Code"
-                        sx={{ flex: 1 }}
-                      />
-                      <FormInput
-                        name="input_box"
-                        defaultValue="Short description"
-                        sx={{ flex: 1 }}
-                      />
+                      <FormInput name="input_box" defaultValue="Current Code" />
+                      <TextField placeholder="Short description" fullWidth />
                     </Stack>
                   </Grid>
                 </Grid>
