@@ -24,8 +24,9 @@ import { toast } from "react-toastify";
 
 import {
   useLazyGetProductQuery,
-  useSearchProductQuery,
+  useLazySearchProductQuery,
   useUpdateProductMutation,
+  useAddProductMutation,
 } from "../../redux/api/productApi";
 import { useNavigate } from "react-router-dom";
 import { IProductHeadings } from "../../redux/api/types";
@@ -44,6 +45,7 @@ const saveSchema = object({
   export_word: string().optional(),
   export_pdf: string().optional(),
   export_text: string().optional(),
+  id: string().optional(),
 });
 
 export type ProductSettingSaveInput = TypeOf<typeof saveSchema>;
@@ -62,22 +64,28 @@ const ProductConfigurator = () => {
   });
 
   const [updateProduct, updateState] = useUpdateProductMutation();
-  const searchState = useSearchProductQuery("");
+  const [searchProduct, searchState] = useLazySearchProductQuery();
   const [getProduct, getState] = useLazyGetProductQuery();
+  const [addProduct, addState] = useAddProductMutation();
 
   const {
     handleSubmit,
     reset,
     register,
     setValue,
+    getValues,
     control,
     formState: { errors },
   } = methods;
 
   useEffect(() => {
+    searchProduct("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (updateState.isSuccess) {
       toast.success("Product saved successfully");
-      console.log("success");
     }
     if (updateState.isError) {
       console.log(updateState.error);
@@ -85,22 +93,39 @@ const ProductConfigurator = () => {
   }, [updateState]);
 
   useEffect(() => {
+    if (addState.isSuccess) {
+      toast.success("Product added successfully");
+    }
+  }, [addState]);
+
+  useEffect(() => {
+    console.log(searchState.data);
+    setFilter(null);
     if (searchState.data) setOptions(searchState.data);
   }, [searchState]);
 
   useEffect(() => {
     const { data } = getState;
-    setValue("product_name", data?.product_name as string);
-    setValue("product_module", data?.product_module as string);
-    setValue("module_description", data?.module_description as string);
-    setValue("source_text", data?.source_text as string);
-    setValue("source_image", data?.source_image as string);
-    setValue("source_url", data?.source_url as string);
-    setValue("input_box_title", data?.input_box_title as string);
-    setValue("input_box_description", data?.input_box_description as string);
-    setValue("export_word", data?.export_word as string);
-    setValue("export_pdf", data?.export_pdf as string);
-    setValue("export_text", data?.export_text as string);
+    setValue("product_name", data?.product_name ? data.product_name : "");
+    setValue("product_module", data?.product_module ? data.product_module : "");
+    setValue(
+      "module_description",
+      data?.module_description ? data.module_description : ""
+    );
+    setValue("source_text", data?.source_text ? data.source_text : "");
+    setValue("source_image", data?.source_image ? data.source_image : "");
+    setValue("source_url", data?.source_url ? data.source_url : "");
+    setValue(
+      "input_box_title",
+      data?.input_box_title ? data.input_box_title : ""
+    );
+    setValue(
+      "input_box_description",
+      data?.input_box_description ? data.input_box_description : ""
+    );
+    setValue("export_word", data?.export_word ? data.export_word : "");
+    setValue("export_pdf", data?.export_pdf ? data.export_pdf : "");
+    setValue("export_text", data?.export_text ? data.export_text : "");
     setCheckedSources(data?.source_check ? data.source_check : []);
     setCheckedExports(data?.export_check ? data.export_check : []);
   }, [getState, setValue]);
@@ -108,7 +133,10 @@ const ProductConfigurator = () => {
   const onSubmitHandler: SubmitHandler<ProductSettingSaveInput> = (
     values: ProductSettingSaveInput
   ) => {
-    updateProduct(values);
+    let id = getValues("id");
+    if (id === "") addProduct(values);
+    else updateProduct(values);
+    searchProduct("");
   };
 
   function handleSelect(checkedValues: string[], checkedName: string) {
@@ -172,6 +200,7 @@ const ProductConfigurator = () => {
                 if (newValue) {
                   setFilter(newValue);
                   getProduct(newValue);
+                  setValue("id", newValue._id);
                 }
               }}
             />
@@ -201,6 +230,8 @@ const ProductConfigurator = () => {
                       sx={{ width: 152, paddingY: 1 }}
                       onClick={() => {
                         reset();
+                        setValue("id", "");
+                        setFilter(null);
                       }}
                     >
                       New
@@ -450,6 +481,7 @@ const ProductConfigurator = () => {
                     </Stack>
                   </Grid>
                 </Grid>
+                <TextField type="hidden" {...register("id")} />
               </Stack>
             </Box>
           </FormProvider>

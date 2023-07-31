@@ -4,7 +4,7 @@ export interface IGenericResponse {
 }
 
 export interface IProduct {
-  _id: string;
+  id: string;
   product_name: string;
   product_module: string;
   module_description: string;
@@ -22,6 +22,7 @@ export interface IProduct {
 }
 
 export interface IProductHeadings {
+  _id: string;
   product_name: string;
   product_module: string;
 }
@@ -31,4 +32,13 @@ export interface IPlanDetail {
   total_wishes: number;
   price: string;
   period: string;
+}
+
+export interface IPrompt {
+  product: string;
+  plan: string;
+  module: string;
+  prompt_name: string;
+  order: number;
+  prompt: string;
 }

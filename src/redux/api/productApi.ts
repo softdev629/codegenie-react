@@ -21,11 +21,21 @@ export const productApi = createApi({
       transformResponse: (results: { data: IProduct }) => results.data,
       providesTags: [{ type: "Product", id: "LIST" }],
     }),
-    updateProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
+    addProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
       query(data) {
         return {
           url: "",
           method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: [{ type: "Product", id: "LIST" }],
+    }),
+    updateProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
+      query(data) {
+        return {
+          url: "",
+          method: "PATCH",
           body: data,
         };
       },
@@ -49,12 +59,24 @@ export const productApi = createApi({
         };
       },
     }),
+
+    getProductsNames: builder.query<string[], void>({
+      query() {
+        return {
+          url: "names",
+          method: "GET",
+        };
+      },
+      transformResponse: (results: { data: string[] }) => results.data,
+    }),
   }),
 });
 
 export const {
   useUpdateProductMutation,
   useLazyGetProductQuery,
-  useSearchProductQuery,
+  useLazySearchProductQuery,
   useUpdatePriceMutation,
+  useAddProductMutation,
+  useGetProductsNamesQuery,
 } = productApi;

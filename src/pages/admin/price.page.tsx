@@ -6,7 +6,6 @@ import {
   Container,
   Stack,
   Grid,
-  Button,
   TextField,
   SvgIcon,
   IconButton,
@@ -24,7 +23,7 @@ import { ReactComponent as PlustIcon } from "../../assets/ico_plus.svg";
 import { IPlanDetail, IProductHeadings } from "../../redux/api/types";
 import {
   useLazyGetProductQuery,
-  useSearchProductQuery,
+  useLazySearchProductQuery,
   useUpdatePriceMutation,
 } from "../../redux/api/productApi";
 
@@ -61,18 +60,16 @@ const PriceConfigurator = () => {
     defaultValues: {},
   });
 
-  const searchState = useSearchProductQuery("");
+  const [searchProduct, searchState] = useLazySearchProductQuery();
   const [getProduct, getState] = useLazyGetProductQuery();
   const [updatePrice, updateState] = useUpdatePriceMutation();
 
-  const {
-    handleSubmit,
-    reset,
-    register,
-    setValue,
-    control,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit, register, setValue } = methods;
+
+  useEffect(() => {
+    searchProduct("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (searchState.data) setOptions(searchState.data);
@@ -189,183 +186,187 @@ const PriceConfigurator = () => {
                   </LoadingButton>
                 </Stack>
               </Stack>
-              <Grid container>
-                <Grid item xs={2}>
-                  <Typography
-                    color="text.secondary"
-                    variant="h6"
-                    fontWeight={400}
-                  >
-                    Product Name
-                  </Typography>
-                </Grid>
-                <Grid item xs={10}>
-                  <TextField
-                    sx={{ width: 350 }}
-                    {...register("product_name")}
-                    disabled
-                    required
-                    variant="outlined"
-                    placeholder="Enter Product name here."
-                  />
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs={2}>
-                  <Typography
-                    color="text.secondary"
-                    variant="h6"
-                    fontWeight={400}
-                  >
-                    Product Module
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={10}
-                  gap={2}
-                  display="flex"
-                  flexDirection="column"
-                >
-                  <TextField
-                    {...register("product_module")}
-                    sx={{ width: 350 }}
-                    placeholder="Enter Product module name here."
-                    disabled
-                  />
-                  <TextField
-                    {...register("module_description")}
-                    disabled
-                    placeholder="Write Product module description here."
-                  />
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs={2}>
-                  <Typography
-                    color="text.secondary"
-                    variant="h6"
-                    fontWeight={400}
-                  >
-                    Plan Details
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={10}
-                  gap={2}
-                  display="flex"
-                  flexDirection="column"
-                >
-                  <Stack flexDirection="row" justifyContent="space-between">
-                    <Typography width={216}>Plan Name</Typography>
-                    <Typography width={141}>Total Wishes</Typography>
-                    <Typography width={99}>Price</Typography>
-                    <Typography width={176}>Period</Typography>
-                    <Box width={68}></Box>
-                  </Stack>
-                  {plans.map((plan, index) => (
-                    <Stack
-                      flexDirection="row"
-                      justifyContent="space-between"
-                      key={`plan_item_${index}`}
+              <FormProvider {...methods}>
+                <Grid container>
+                  <Grid item xs={2}>
+                    <Typography
+                      color="text.secondary"
+                      variant="h6"
+                      fontWeight={400}
                     >
-                      <TextField
-                        {...register(`plan_details.${index}.plan_name`)}
-                        sx={{ width: 216 }}
-                        placeholder="Plan Name"
-                        value={plan.plan_name}
-                        onChange={(e) => {
-                          plans[index].plan_name = e.target.value;
-                          setPlans([...plans]);
-                        }}
-                      />
-                      <TextField
-                        {...register(`plan_details.${index}.total_wishes`, {
-                          valueAsNumber: true,
-                        })}
-                        type="number"
-                        sx={{ width: 141 }}
-                        placeholder="Total Wishes"
-                        value={plan.total_wishes}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          plans[index].total_wishes = e.target.valueAsNumber;
-                          setPlans([...plans]);
-                        }}
-                      />
-                      <TextField
-                        {...register(`plan_details.${index}.price`)}
-                        sx={{ width: 99 }}
-                        placeholder="Price"
-                        value={plan.price}
-                        onChange={(e) => {
-                          plans[index].price = e.target.value;
-                          setPlans([...plans]);
-                        }}
-                      />
-                      <TextField
-                        {...register(`plan_details.${index}.period`)}
-                        select
-                        sx={{ width: 176 }}
-                        value={plan.period}
-                        onChange={(e) => {
-                          plans[index].period = e.target.value;
-                          setPlans([...plans]);
-                        }}
-                      >
-                        <MenuItem value="monthly">Monthly</MenuItem>
-                        <MenuItem value="yearly">Yearly</MenuItem>
-                      </TextField>
+                      Product Name
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={10}>
+                    <TextField
+                      sx={{ width: 350 }}
+                      {...register("product_name")}
+                      disabled
+                      required
+                      variant="outlined"
+                      placeholder="Enter Product name here."
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item xs={2}>
+                    <Typography
+                      color="text.secondary"
+                      variant="h6"
+                      fontWeight={400}
+                    >
+                      Product Module
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    gap={2}
+                    display="flex"
+                    flexDirection="column"
+                  >
+                    <TextField
+                      {...register("product_module")}
+                      sx={{ width: 350 }}
+                      placeholder="Enter Product module name here."
+                      disabled
+                    />
+                    <TextField
+                      {...register("module_description")}
+                      disabled
+                      placeholder="Write Product module description here."
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item xs={2}>
+                    <Typography
+                      color="text.secondary"
+                      variant="h6"
+                      fontWeight={400}
+                    >
+                      Plan Details
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={10}
+                    gap={2}
+                    display="flex"
+                    flexDirection="column"
+                  >
+                    <Stack flexDirection="row" justifyContent="space-between">
+                      <Typography width={216}>Plan Name</Typography>
+                      <Typography width={141}>Total Wishes</Typography>
+                      <Typography width={99}>Price</Typography>
+                      <Typography width={176}>Period</Typography>
+                      <Box width={68}></Box>
+                    </Stack>
+                    {plans.map((plan, index) => (
                       <Stack
-                        width={68}
                         flexDirection="row"
                         justifyContent="space-between"
+                        key={`plan_item_${index}`}
                       >
-                        <IconButton
-                          sx={{ width: 30, height: 30 }}
-                          onClick={() => {
-                            plans.splice(index, 1);
-                            if (plans.length === 0)
-                              setPlans([
-                                {
-                                  plan_name: "",
-                                  total_wishes: 0,
-                                  price: "",
-                                  period: "",
-                                },
-                              ]);
-                            else setPlans([...plans]);
+                        <TextField
+                          {...register(`plan_details.${index}.plan_name`)}
+                          sx={{ width: 216 }}
+                          placeholder="Plan Name"
+                          value={plan.plan_name}
+                          onChange={(e) => {
+                            plans[index].plan_name = e.target.value;
+                            setPlans([...plans]);
+                          }}
+                        />
+                        <TextField
+                          {...register(`plan_details.${index}.total_wishes`, {
+                            valueAsNumber: true,
+                          })}
+                          type="number"
+                          sx={{ width: 141 }}
+                          placeholder="Total Wishes"
+                          value={plan.total_wishes}
+                          onChange={(
+                            e: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            plans[index].total_wishes = e.target.valueAsNumber;
+                            setPlans([...plans]);
+                          }}
+                        />
+                        <TextField
+                          {...register(`plan_details.${index}.price`)}
+                          sx={{ width: 99 }}
+                          placeholder="Price"
+                          value={plan.price}
+                          onChange={(e) => {
+                            plans[index].price = e.target.value;
+                            setPlans([...plans]);
+                          }}
+                        />
+                        <TextField
+                          {...register(`plan_details.${index}.period`)}
+                          select
+                          sx={{ width: 176 }}
+                          value={plan.period}
+                          onChange={(e) => {
+                            plans[index].period = e.target.value;
+                            setPlans([...plans]);
                           }}
                         >
-                          <SvgIcon>
-                            <DeleteIcon />
-                          </SvgIcon>
-                        </IconButton>
-                        {index === plans.length - 1 && (
+                          <MenuItem value="monthly">Monthly</MenuItem>
+                          <MenuItem value="yearly">Yearly</MenuItem>
+                        </TextField>
+                        <Stack
+                          width={68}
+                          flexDirection="row"
+                          justifyContent="space-between"
+                        >
                           <IconButton
                             sx={{ width: 30, height: 30 }}
-                            onClick={() =>
-                              setPlans([
-                                ...plans,
-                                {
-                                  plan_name: "",
-                                  total_wishes: 0,
-                                  price: "",
-                                  period: "",
-                                },
-                              ])
-                            }
+                            onClick={() => {
+                              plans.splice(index, 1);
+                              if (plans.length === 0)
+                                setPlans([
+                                  {
+                                    plan_name: "",
+                                    total_wishes: 0,
+                                    price: "",
+                                    period: "",
+                                  },
+                                ]);
+                              else setPlans([...plans]);
+                            }}
                           >
                             <SvgIcon>
-                              <PlustIcon />
+                              <DeleteIcon />
                             </SvgIcon>
                           </IconButton>
-                        )}
+                          {index === plans.length - 1 && (
+                            <IconButton
+                              sx={{ width: 30, height: 30 }}
+                              onClick={() =>
+                                setPlans([
+                                  ...plans,
+                                  {
+                                    plan_name: "",
+                                    total_wishes: 0,
+                                    price: "",
+                                    period: "",
+                                  },
+                                ])
+                              }
+                            >
+                              <SvgIcon>
+                                <PlustIcon />
+                              </SvgIcon>
+                            </IconButton>
+                          )}
+                        </Stack>
                       </Stack>
-                    </Stack>
-                  ))}
+                    ))}
+                  </Grid>
                 </Grid>
-              </Grid>
+              </FormProvider>
             </Stack>
           </Box>
         </Stack>

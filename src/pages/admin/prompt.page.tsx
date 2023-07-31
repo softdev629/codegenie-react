@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -5,15 +6,20 @@ import {
   Container,
   Stack,
   Button,
-  TextField,
   SvgIcon,
-  MenuItem,
 } from "@mui/material";
-// import { LoadingButton } from "@mui/lab";
 
 import { ReactComponent as PlustWhiteIcon } from "../../assets/ico_plus_white.svg";
+import Prompt from "../../components/Prompt";
+import { IPrompt } from "../../redux/api/types";
+import { useGetProductsNamesQuery } from "../../redux/api/productApi";
 
 const PromptConfigurator = () => {
+  const [prompts, setPrompts] = useState<IPrompt[]>([]);
+  const [products, setProducts] = useState([]);
+
+  const getNamesState = useGetProductsNamesQuery();
+
   return (
     <>
       <Box paddingY={5}>
@@ -44,53 +50,35 @@ const PromptConfigurator = () => {
                   <PlustWhiteIcon />
                 </SvgIcon>
               }
+              onClick={() => {
+                setPrompts([
+                  ...prompts,
+                  {
+                    product: "",
+                    plan: "",
+                    module: "",
+                    prompt_name: "",
+                    order: 0,
+                    prompt: "",
+                  },
+                ]);
+              }}
             >
               Add prompt configuration settings
             </Button>
           </Stack>
-          <Box
-            padding={4}
-            border="1px solid #CACBCC"
-            borderRadius={1}
-            component="form"
-            // onSubmit={handleSubmit(onSubmitHandler)}
-            noValidate
-          >
-            <Stack flexDirection="row" justifyContent="space-between">
-              <Typography width={181}>Products</Typography>
-              <Typography width={216}>Plans</Typography>
-              <Typography width={216}>Module</Typography>
-              <Typography width={216}>Prompt name</Typography>
-              <Typography width={184}>Feature list order</Typography>
-            </Stack>
-            <Stack flexDirection="row" justifyContent="space-between">
-              <TextField sx={{ width: 181 }} size="small" select>
-                <MenuItem value="placeholder">Select product</MenuItem>
-              </TextField>
-              <TextField sx={{ width: 216 }} size="small" select>
-                <MenuItem value="free">Free</MenuItem>
-              </TextField>
-              <TextField sx={{ width: 216 }} size="small" select>
-                <MenuItem value="all">All Code</MenuItem>
-              </TextField>
-              <TextField sx={{ width: 216 }} size="small" select>
-                <MenuItem value="debug">Debug</MenuItem>
-              </TextField>
-              <TextField sx={{ width: 184 }} size="small" select>
-                <MenuItem value="feature">Feature list order</MenuItem>
-              </TextField>
-            </Stack>
-            <Stack flexDirection="row" justifyContent="flex-end">
-              <Typography width={184}>Note: 3rd listed in UI</Typography>
-            </Stack>
-            <Typography>Prompt</Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              defaultValue="Analyze the code if the code is a smart contract then simply say “the code is smart contract. Please use the smart contract module to analyze this code”. If the code is not smart contract then DEBUG the code."
+          {prompts.map((prompt, index) => (
+            <Prompt
+              key={`prompt_box_${index}`}
+              products={products}
+              product={prompt.product}
+              plan={prompt.plan}
+              module={prompt.module}
+              prompt_name={prompt.prompt_name}
+              order={prompt.order}
+              prompt={prompt.prompt}
             />
-          </Box>
+          ))}
         </Stack>
       </Container>
     </>
