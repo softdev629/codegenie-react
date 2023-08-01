@@ -35,6 +35,7 @@ export interface IPlanDetail {
 }
 
 export interface IPrompt {
+  _id: string;
   product: string;
   plan: string;
   module: string;

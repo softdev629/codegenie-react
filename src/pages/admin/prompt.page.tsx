@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 import { ReactComponent as PlustWhiteIcon } from "../../assets/ico_plus_white.svg";
-import Prompt from "../../components/Prompt";
+import Prompt, { IPromptSchema } from "../../components/Prompt";
 import { IPrompt } from "../../redux/api/types";
 import { useGetProductsNamesQuery } from "../../redux/api/productApi";
 
@@ -58,6 +58,7 @@ const PromptConfigurator = () => {
                 setPrompts([
                   ...prompts,
                   {
+                    _id: "",
                     product: "",
                     plan: "",
                     module: "",
@@ -74,6 +75,7 @@ const PromptConfigurator = () => {
           {prompts.map((prompt, index) => (
             <Prompt
               key={`prompt_box_${index}`}
+              id={prompt._id}
               products={products}
               product={prompt.product}
               plan={prompt.plan}

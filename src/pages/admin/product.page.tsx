@@ -86,6 +86,7 @@ const ProductConfigurator = () => {
   useEffect(() => {
     if (updateState.isSuccess) {
       toast.success("Product saved successfully");
+      searchProduct("");
     }
     if (updateState.isError) {
       console.log(updateState.error);
@@ -95,13 +96,13 @@ const ProductConfigurator = () => {
   useEffect(() => {
     if (addState.isSuccess) {
       toast.success("Product added successfully");
+      searchProduct("");
     }
   }, [addState]);
 
   useEffect(() => {
-    console.log(searchState.data);
     setFilter(null);
-    if (searchState.data) setOptions(searchState.data);
+    if (searchState.isSuccess) setOptions(searchState.data);
   }, [searchState]);
 
   useEffect(() => {
@@ -136,7 +137,6 @@ const ProductConfigurator = () => {
     let id = getValues("id");
     if (id === "") addProduct(values);
     else updateProduct(values);
-    searchProduct("");
   };
 
   function handleSelect(checkedValues: string[], checkedName: string) {
@@ -481,7 +481,11 @@ const ProductConfigurator = () => {
                     </Stack>
                   </Grid>
                 </Grid>
-                <TextField type="hidden" {...register("id")} />
+                <TextField
+                  {...register("id")}
+                  type="hidden"
+                  sx={{ display: "none" }}
+                />
               </Stack>
             </Box>
           </FormProvider>
