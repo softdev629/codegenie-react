@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -16,9 +16,13 @@ import { useGetProductsNamesQuery } from "../../redux/api/productApi";
 
 const PromptConfigurator = () => {
   const [prompts, setPrompts] = useState<IPrompt[]>([]);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<string[]>([]);
 
   const getNamesState = useGetProductsNamesQuery();
+
+  useEffect(() => {
+    if (getNamesState.data) setProducts(getNamesState.data);
+  }, [getNamesState]);
 
   return (
     <>
