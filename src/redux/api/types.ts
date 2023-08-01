@@ -43,3 +43,13 @@ export interface IPrompt {
   order: number;
   prompt: string;
 }
+
+export interface IPromptAcceptSchema {
+  _id: string;
+  product_name: string;
+  product_module: string;
+  plan: string;
+  prompt_name: string;
+  order: number;
+  prompt: string;
+}

@@ -91,6 +91,7 @@ const ProductConfigurator = () => {
     if (updateState.isError) {
       console.log(updateState.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateState]);
 
   useEffect(() => {
@@ -98,6 +99,7 @@ const ProductConfigurator = () => {
       toast.success("Product added successfully");
       searchProduct("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addState]);
 
   useEffect(() => {

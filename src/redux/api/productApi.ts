@@ -84,7 +84,7 @@ export const productApi = createApi({
         results.data.map((item) => item.product_module),
     }),
     getPrices: builder.query<
-      IPlanDetail[],
+      IPlanDetail[] | null,
       { product_name: string; product_module: string }
     >({
       query({ product_name, product_module }) {
@@ -93,8 +93,9 @@ export const productApi = createApi({
           method: "GET",
         };
       },
-      transformResponse: (results: { data: { plan_details: IPlanDetail[] } }) =>
-        results.data.plan_details,
+      transformResponse: (results: {
+        data: { plan_details: IPlanDetail[] } | null;
+      }) => (results.data ? results.data.plan_details : null),
     }),
   }),
 });

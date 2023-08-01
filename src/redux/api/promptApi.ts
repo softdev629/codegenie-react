@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ProductSettingSaveInput } from "../../pages/admin/product.page";
-import { IGenericResponse, IPrompt } from "./types";
+import { IGenericResponse, IPrompt, IPromptAcceptSchema } from "./types";
 import { IPromptSchema } from "../../components/Prompt";
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
@@ -22,25 +21,35 @@ export const promptApi = createApi({
       },
       invalidatesTags: [{ type: "Prompt", id: "LIST" }],
     }),
-    getPrompts: builder.query<IPrompt[], void>({
+    getPrompts: builder.query<IPromptAcceptSchema[], void>({
       query() {
         return {
           url: "",
           method: "GET",
         };
       },
+      transformResponse: (results: { data: IPromptAcceptSchema[] }) =>
+        results.data,
+      providesTags: [{ type: "Prompt", id: "LIST" }],
     }),
-    // updateProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
-    //   query(data) {
-    //     return {
-    //       url: "",
-    //       method: "PATCH",
-    //       body: data,
-    //     };
-    //   },
-    //   invalidatesTags: [{ type: "Product", id: "LIST" }],
-    // }),
+    updatePrompt: builder.mutation<
+      IGenericResponse,
+      { id: string; info: IPromptSchema }
+    >({
+      query({ id, info }) {
+        return {
+          url: `${id}`,
+          method: "PATCH",
+          body: info,
+        };
+      },
+      invalidatesTags: [{ type: "Prompt", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useAddPromptMutation } = promptApi;
+export const {
+  useAddPromptMutation,
+  useGetPromptsQuery,
+  useUpdatePromptMutation,
+} = promptApi;

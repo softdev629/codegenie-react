@@ -14,6 +14,7 @@ import ProductConfigurator from "./pages/admin/product.page";
 import PriceConfigurator from "./pages/admin/price.page";
 import PromptConfigurator from "./pages/admin/prompt.page";
 import Dashboard from "./pages/admin/dashboard.page";
+import ContentGenerator from "./pages/admin/blogcreate.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -45,6 +46,9 @@ function App() {
                 <Route path="products" element={<ProductConfigurator />} />
                 <Route path="prompts" element={<PromptConfigurator />} />
                 <Route path="prices" element={<PriceConfigurator />} />
+              </Route>
+              <Route path="content">
+                <Route path="generate" element={<ContentGenerator />} />
               </Route>
             </Route>
           </Routes>

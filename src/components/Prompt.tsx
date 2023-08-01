@@ -10,11 +10,14 @@ import {
   useLazyGetModulesQuery,
   useLazyGetPricesQuery,
 } from "../redux/api/productApi";
-import { useAddPromptMutation } from "../redux/api/promptApi";
+import {
+  useAddPromptMutation,
+  useUpdatePromptMutation,
+} from "../redux/api/promptApi";
 
 const promptSchema = object({
   product: string(),
-  plan: string(),
+  plan: string().optional(),
   module: string(),
   prompt_name: string(),
   order: number(),
@@ -33,12 +36,13 @@ const Prompt = (props: {
   prompt: string;
   products: string[];
 }) => {
-  const [plans, setPlans] = useState([""]);
-  const [modules, setModules] = useState([""]);
+  const [plans, setPlans] = useState([props.plan]);
+  const [modules, setModules] = useState([props.module]);
 
   const [getModules, modulesState] = useLazyGetModulesQuery();
   const [getPrices, pricesState] = useLazyGetPricesQuery();
   const [addPrompt, addState] = useAddPromptMutation();
+  const [updatePrompt, updateState] = useUpdatePromptMutation();
 
   const methods = useForm<IPromptSchema>({
     resolver: zodResolver(promptSchema),
@@ -52,12 +56,16 @@ const Prompt = (props: {
     },
   });
 
-  const {
-    handleSubmit,
-    getValues,
-    register,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit, getValues, register, setValue } = methods;
+
+  useEffect(() => {
+    if (props.product !== "") {
+      getModules(props.product);
+      getPrices({ product_name: props.product, product_module: props.module });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (modulesState.isSuccess) {
@@ -66,18 +74,29 @@ const Prompt = (props: {
   }, [modulesState]);
 
   useEffect(() => {
-    if (pricesState.isSuccess)
-      setPlans(pricesState.data.map((item) => item.plan_name));
+    if (pricesState.isSuccess) {
+      if (pricesState.data)
+        setPlans(pricesState.data.map((item) => item.plan_name));
+      else {
+        setPlans([""]);
+        setValue("plan", "");
+      }
+    }
   }, [pricesState]);
 
   useEffect(() => {
     if (addState.isSuccess) toast.success("Prompt added successfully.");
   }, [addState]);
 
+  useEffect(() => {
+    if (updateState.isSuccess) toast.success("Prompt updated successfully.");
+  }, [updateState]);
+
   const onSubmitHandler: SubmitHandler<IPromptSchema> = (
     values: IPromptSchema
   ) => {
     if (props.id === "") addPrompt(values);
+    else updatePrompt({ id: props.id, info: values });
   };
 
   return (
@@ -134,7 +153,7 @@ const Prompt = (props: {
               ))}
             </TextField>
             <TextField
-              {...register("plan")}
+              {...register("module")}
               sx={{ width: 216 }}
               size="small"
               select

@@ -10,19 +10,25 @@ import {
 } from "@mui/material";
 
 import { ReactComponent as PlustWhiteIcon } from "../../assets/ico_plus_white.svg";
-import Prompt, { IPromptSchema } from "../../components/Prompt";
-import { IPrompt } from "../../redux/api/types";
+import Prompt from "../../components/Prompt";
+import { IPromptAcceptSchema } from "../../redux/api/types";
 import { useGetProductsNamesQuery } from "../../redux/api/productApi";
+import { useGetPromptsQuery } from "../../redux/api/promptApi";
 
 const PromptConfigurator = () => {
-  const [prompts, setPrompts] = useState<IPrompt[]>([]);
+  const [prompts, setPrompts] = useState<IPromptAcceptSchema[]>([]);
   const [products, setProducts] = useState<string[]>([]);
 
   const getNamesState = useGetProductsNamesQuery();
+  const getPromptsState = useGetPromptsQuery();
 
   useEffect(() => {
-    if (getNamesState.data) setProducts(getNamesState.data);
+    if (getNamesState.isSuccess) setProducts(getNamesState.data);
   }, [getNamesState]);
+
+  useEffect(() => {
+    if (getPromptsState.isSuccess) setPrompts([...getPromptsState.data]);
+  }, [getPromptsState]);
 
   return (
     <>
@@ -59,9 +65,9 @@ const PromptConfigurator = () => {
                   ...prompts,
                   {
                     _id: "",
-                    product: "",
+                    product_name: "",
                     plan: "",
-                    module: "",
+                    product_module: "",
                     prompt_name: "",
                     order: 0,
                     prompt: "",
@@ -77,9 +83,9 @@ const PromptConfigurator = () => {
               key={`prompt_box_${index}`}
               id={prompt._id}
               products={products}
-              product={prompt.product}
+              product={prompt.product_name}
               plan={prompt.plan}
-              module={prompt.module}
+              module={prompt.product_module}
               prompt_name={prompt.prompt_name}
               order={prompt.order}
               prompt={prompt.prompt}
