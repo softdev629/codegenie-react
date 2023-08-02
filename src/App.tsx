@@ -9,12 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Layout from "./components/Layout";
 import { getDesignTokens, ColorModeContext } from "./theme";
-import AnyCodePage from "./pages/anycode.page";
 import ProductConfigurator from "./pages/admin/product.page";
 import PriceConfigurator from "./pages/admin/price.page";
 import PromptConfigurator from "./pages/admin/prompt.page";
 import Dashboard from "./pages/admin/dashboard.page";
 import ContentGenerator from "./pages/admin/blogcreate.page";
+import GeniePage from "./pages/genie.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -38,7 +38,7 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route path="/" element={<Layout type="user" />}>
-              <Route path="anycode" element={<AnyCodePage />} />
+              <Route path="codegenie/:module" element={<GeniePage />} />
             </Route>
             <Route path="/admin" element={<Layout type="admin" />}>
               <Route path="dashboard" element={<Dashboard />} />

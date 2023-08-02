@@ -53,3 +53,10 @@ export interface IPromptAcceptSchema {
   order: number;
   prompt: string;
 }
+
+export interface IPromptRunSchema {
+  product_name: string;
+  product_module: string;
+  prompt_name: string;
+  code: string;
+}

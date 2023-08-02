@@ -82,6 +82,7 @@ const Prompt = (props: {
         setValue("plan", "");
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pricesState]);
 
   useEffect(() => {

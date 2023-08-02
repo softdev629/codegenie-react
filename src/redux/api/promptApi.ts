@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IGenericResponse, IPrompt, IPromptAcceptSchema } from "./types";
+import {
+  IGenericResponse,
+  IPromptAcceptSchema,
+  IPromptRunSchema,
+} from "./types";
 import { IPromptSchema } from "../../components/Prompt";
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
@@ -45,6 +49,28 @@ export const promptApi = createApi({
       },
       invalidatesTags: [{ type: "Prompt", id: "LIST" }],
     }),
+    getPromptNames: builder.query<
+      string[],
+      { product_name: string; product_module: string }
+    >({
+      query({ product_name, product_module }) {
+        return {
+          url: `names?product_name=${product_name}&product_module=${product_module}`,
+        };
+      },
+      transformResponse: (results: { data: { prompt_name: string }[] }) =>
+        results.data.map((item) => item.prompt_name),
+    }),
+    runPrompt: builder.mutation<string, IPromptRunSchema>({
+      query(data) {
+        return {
+          url: "run",
+          method: "POST",
+          body: data,
+        };
+      },
+      transformResponse: (results: { msg: string }) => results.msg,
+    }),
   }),
 });
 
@@ -52,4 +78,6 @@ export const {
   useAddPromptMutation,
   useGetPromptsQuery,
   useUpdatePromptMutation,
+  useGetPromptNamesQuery,
+  useRunPromptMutation,
 } = promptApi;
