@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import { useGetProductQuery } from "../redux/api/productApi";
 import { useRunPromptMutation } from "../redux/api/promptApi";
 import { setMsg } from "../redux/features/genieSlice";
+import { useNavigate } from "react-router-dom";
 
 const loadTypes = [
   {
@@ -117,6 +118,7 @@ const GeniePage = () => {
 
   const genieSelector = useAppSelector((state) => state.genieState);
   const dipatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const productState = useGetProductQuery({
     _id: "",
@@ -145,7 +147,14 @@ const GeniePage = () => {
     );
 
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href="/">
+    <Link
+      underline="hover"
+      key="1"
+      color="inherit"
+      onClick={() => {
+        navigate("/");
+      }}
+    >
       Home
     </Link>,
     <Typography key="3" color="text.primary">
@@ -271,9 +280,6 @@ const GeniePage = () => {
                       product_name: "CodeGenie",
                       product_module: genieSelector.module
                         ? genieSelector.module
-                        : "",
-                      prompt_name: genieSelector.prompt_name
-                        ? genieSelector.prompt_name
                         : "",
                       code: code,
                     });

@@ -189,7 +189,11 @@ export default function TotalPanel() {
               },
             })}
           >
-            {genieSelector.msg}
+            {
+              genieSelector.msg[
+                genieSelector.prompt_name ? genieSelector.prompt_name : ""
+              ]
+            }
           </Box>
         </Stack>
       </TabPanel>

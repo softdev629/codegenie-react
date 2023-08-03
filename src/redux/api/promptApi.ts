@@ -61,7 +61,7 @@ export const promptApi = createApi({
       transformResponse: (results: { data: { prompt_name: string }[] }) =>
         results.data.map((item) => item.prompt_name),
     }),
-    runPrompt: builder.mutation<string, IPromptRunSchema>({
+    runPrompt: builder.mutation<Array<any>, IPromptRunSchema>({
       query(data) {
         return {
           url: "run",
@@ -69,7 +69,7 @@ export const promptApi = createApi({
           body: data,
         };
       },
-      transformResponse: (results: { msg: string }) => results.msg,
+      transformResponse: (results: { msg: Array<any> }) => results.msg,
     }),
   }),
 });

@@ -138,6 +138,10 @@ function Header() {
               color: "inherit",
               textDecoration: "none",
             }}
+            onClick={(event) => {
+              event.preventDefault();
+              navigate("/");
+            }}
           >
             CodeGenie
           </Typography>

@@ -57,6 +57,5 @@ export interface IPromptAcceptSchema {
 export interface IPromptRunSchema {
   product_name: string;
   product_module: string;
-  prompt_name: string;
   code: string;
 }

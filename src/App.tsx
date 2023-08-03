@@ -15,6 +15,7 @@ import PromptConfigurator from "./pages/admin/prompt.page";
 import Dashboard from "./pages/admin/dashboard.page";
 import ContentGenerator from "./pages/admin/blogcreate.page";
 import GeniePage from "./pages/genie.page";
+import LandingPage from "./pages/landing.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -38,6 +39,7 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route path="/" element={<Layout type="user" />}>
+              <Route path="" element={<LandingPage />} />
               <Route path="codegenie/:module" element={<GeniePage />} />
             </Route>
             <Route path="/admin" element={<Layout type="admin" />}>
