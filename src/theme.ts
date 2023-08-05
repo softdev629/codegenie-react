@@ -39,6 +39,12 @@ export const getDesignTokens = (mode: PaletteMode) => ({
         }),
   },
   typography: {
+    h4: {
+      fontWeight: 700,
+    },
+    h6: {
+      fontSize: 16,
+    },
     button: {
       textTransform: "none",
     },

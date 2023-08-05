@@ -73,6 +73,60 @@ const genie_product = [
   },
 ];
 
+const faqs = [
+  {
+    title: "What is Code Genie?",
+    content:
+      "Code Genie is a versatile tool that supports a wide range of modern programming languages. It can analyze, fix, rewrite, and assist with code in almost any language. Its language-agnostic nature allows developers and companies to leverage its capabilities regardless of the technology stack they are working with.",
+  },
+  {
+    title: "What programming languages does Code Genie support?",
+    content:
+      "Code Genie supports a wide range of programming languages, from popular ones like Python, JavaScript, and Java to specialized languages like Solidity for smart contract development. Its language-agnostic nature means it can work with practically any programming language, including PHP, Node.js, Angular, and more.",
+  },
+  {
+    title: "What are the benefits of using Code Genie for developers?",
+    content:
+      "The value to developers lies in the increased productivity, reduced manual effort, and time savings of potentially hours or days of work per week. This enables them to focus on critical aspects of development.",
+  },
+  {
+    title:
+      "How can Code Genie help companies optimize their development processes?",
+    content:
+      "By using Code Genie, companies can optimize their development processes, increase their development team's efficiency, and deliver high-quality, bug-free software products in a timely manner.",
+  },
+  {
+    title: "What tasks can Code Genie perform?",
+    content:
+      "Code Genie can audit, fix, refactor, document any code within seconds. It can also create test cases, provide non-techie code summaries, create feature suggestions, offer detailed code reviews, convert monolithic code to microservices, and rewrite code.",
+  },
+  {
+    title: "Who can benefit from using Code Genie?",
+    content:
+      "Code Genie is beneficial for CTOs, Engineering Managers, QA, Product Managers, and developers. It helps solve common problems faced by these professionals daily, such as bug fixing, code documentation, code refactoring, and converting old code to microservices.",
+  },
+  {
+    title: "Does Code Genie write code from scratch or replace developers?",
+    content:
+      "No, Code Genie does not write code from scratch and is not trying to replace developers. It is focused on helping and augmenting the development team’s efforts to ship more stable, bug-free products on time and frequently.",
+  },
+  {
+    title: "How does Code Genie help with blockchain smart contracts?",
+    content:
+      "Code Genie is an indispensable tool for auditing and optimizing blockchain smart contracts. With a deep understanding of Solidity and Ethereum's ecosystem, it identifies security flaws and potential improvements. Through automated code reviews and best practices, it ensures high standards of security and efficiency.",
+  },
+  {
+    title: "Can Code Genie convert monolithic code to microservices?",
+    content:
+      "Yes, Code Genie excels at converting monolithic code into scalable microservices. It analyzes the codebase, identifies microservices opportunities, and provides refactoring guidelines.",
+  },
+  {
+    title: "How does Code Genie assist with API documentation?",
+    content:
+      "Code Genie is an invaluable resource for automated API documentation. It extracts API endpoints, request/response structures, and auth mechanisms from the codebase, generating clear docs with examples, parameters, and error handling. This saves developers time and effort, ensuring accurate and up-to-date documentation.",
+  },
+];
+
 const LandingPage = () => {
   return (
     <>
@@ -152,7 +206,7 @@ const LandingPage = () => {
           <HeroGrad />
         </Box>
         <Box position="absolute" right={50} top={73}>
-          <img src={HeroGenie} />
+          <img src={HeroGenie} alt="Genie" />
         </Box>
         <Box position="absolute" right={72} top={116}>
           <HeroIconsBack />
@@ -173,11 +227,11 @@ const LandingPage = () => {
             justifyContent: "space-between",
           }}
         >
-          <img src={PeopleSoftLogo} height={38} />
-          <img src={OracleLogo} height={32} />
-          <img src={CorningLogo} height={28} />
-          <img src={NevadaLogo} height={76} />
-          <img src={HPLogo} height={52} />
+          <img src={PeopleSoftLogo} height={38} alt="PeopleSoft" />
+          <img src={OracleLogo} height={32} alt="Oracle" />
+          <img src={CorningLogo} height={28} alt="Corning" />
+          <img src={NevadaLogo} height={76} alt="Nevada" />
+          <img src={HPLogo} height={52} alt="HP" />
         </Container>
       </Stack>
       <Box position="relative">
@@ -310,7 +364,7 @@ const LandingPage = () => {
           <GraphicBack />
         </Box>
         <Box position="absolute" top={184} right={40}>
-          <img src={Section2Back} />
+          <img src={Section2Back} alt="Circles" />
         </Box>
       </Box>
       <Box
@@ -615,7 +669,7 @@ const LandingPage = () => {
       <Box
         sx={(theme) => ({
           backgroundColor:
-            theme.palette.mode == "light" ? "#F5F5F5" : "#242936",
+            theme.palette.mode === "light" ? "#F5F5F5" : "#242936",
           py: 16,
         })}
       >
@@ -639,12 +693,12 @@ const LandingPage = () => {
             {genie_product.map((item, index) => (
               <Box display="flex" key={`product_item_${index}`}>
                 <Stack
-                  flexDirection={index % 2 == 0 ? "row" : "row-reverse"}
+                  flexDirection={index % 2 === 0 ? "row" : "row-reverse"}
                   gap={16}
                   alignItems="center"
                 >
                   <Box width={560}>
-                    <img src={item.src} />
+                    <img src={item.src} alt={`Product ${item.title}`} />
                   </Box>
                   <Box flexGrow={1}>
                     <Typography color="primary.main" variant="h4" mb={1}>
@@ -702,14 +756,13 @@ const LandingPage = () => {
               </Typography>
             </Stack>
             <Stack flexGrow={1}>
-              <FAQItem
-                title="What is CODEGENIE?"
-                content="Code Genie is an AI based assistant that focuses on helping developers and engineers with common problem.  It was built by engineers for engineers."
-              />
-              <FAQItem
-                title="Who built CODE GENIE?"
-                content="Mr.Rohan Hall is a main founder of CodeGenie."
-              />
+              {faqs.map((faq, index) => (
+                <FAQItem
+                  title={faq.title}
+                  content={faq.content}
+                  key={`faq_item_${index}`}
+                />
+              ))}
             </Stack>
           </Stack>
         </Container>

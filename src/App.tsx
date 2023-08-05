@@ -16,6 +16,7 @@ import Dashboard from "./pages/admin/dashboard.page";
 import ContentGenerator from "./pages/admin/blogcreate.page";
 import GeniePage from "./pages/genie.page";
 import LandingPage from "./pages/landing.page";
+import SignupPage from "./pages/auth/signup.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -53,6 +54,7 @@ function App() {
                 <Route path="generate" element={<ContentGenerator />} />
               </Route>
             </Route>
+            <Route path="/signup" element={<SignupPage />} />
           </Routes>
         </ThemeProvider>
       </ColorModeContext.Provider>
