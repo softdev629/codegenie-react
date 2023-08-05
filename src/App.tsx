@@ -3,10 +3,10 @@ import { CssBaseline } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import { PaletteMode } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
+import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout";
 import { getDesignTokens, ColorModeContext } from "./theme";
 import ProductConfigurator from "./pages/admin/product.page";
@@ -17,6 +17,8 @@ import ContentGenerator from "./pages/admin/blogcreate.page";
 import GeniePage from "./pages/genie.page";
 import LandingPage from "./pages/landing.page";
 import SignupPage from "./pages/auth/signup.page";
+import TermsPage from "./pages/terms.page";
+import SigninPage from "./pages/auth/signin.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -55,6 +57,8 @@ function App() {
               </Route>
             </Route>
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/signin" element={<SigninPage />} />
+            <Route path="/terms" element={<TermsPage />} />
           </Routes>
         </ThemeProvider>
       </ColorModeContext.Provider>

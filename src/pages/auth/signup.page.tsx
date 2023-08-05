@@ -6,7 +6,12 @@ import {
   Stack,
   SvgIcon,
   Divider,
+  FormControl,
+  TextField,
+  Checkbox,
+  Button,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 import { ReactComponent as GoogleIcon } from "../../assets/ico_google.svg";
 import { ReactComponent as FacebookIcon } from "../../assets/ico_facebook.svg";
@@ -141,6 +146,69 @@ const SignupPage = () => {
                 <Typography>Or</Typography>
                 <Divider sx={{ flexGrow: 1 }} />
               </Stack>
+              <Stack gap={3}>
+                <FormControl fullWidth>
+                  <Typography mb={1} color="text.secondary">
+                    Name
+                  </Typography>
+                  <TextField placeholder="Enter full name" />
+                </FormControl>
+                <FormControl fullWidth>
+                  <Typography mb={1} color="text.secondary">
+                    Email address
+                  </Typography>
+                  <TextField type="email" placeholder="Enter full name" />
+                </FormControl>
+                <FormControl fullWidth>
+                  <Typography mb={1} color="text.secondary">
+                    Password
+                  </Typography>
+                  <TextField type="password" placeholder="Enter full name" />
+                </FormControl>
+                <FormControl fullWidth>
+                  <Typography mb={1} color="text.secondary">
+                    Confirm Password
+                  </Typography>
+                  <TextField type="password" placeholder="Enter full name" />
+                </FormControl>
+                <Box display="flex" alignItems="center">
+                  <Checkbox />{" "}
+                  <Typography>
+                    I agree to the{" "}
+                    <Link
+                      to="/terms"
+                      style={{
+                        color: "#0168B5",
+                      }}
+                    >
+                      Terms & Privacy Policy
+                    </Link>
+                  </Typography>
+                </Box>
+              </Stack>
+              <Button
+                fullWidth
+                sx={{
+                  height: 56,
+                  background:
+                    "linear-gradient(90deg, #036AB7 0%, #4BA5EB 100%)",
+                  color: "white",
+                  mt: 4,
+                }}
+              >
+                Sign Up
+              </Button>
+              <Typography mt={3}>
+                Have an account?{" "}
+                <Link
+                  to="/signin"
+                  style={{
+                    color: "#0168B5",
+                  }}
+                >
+                  Sign In
+                </Link>
+              </Typography>
             </Box>
           </Grid>
         </Grid>

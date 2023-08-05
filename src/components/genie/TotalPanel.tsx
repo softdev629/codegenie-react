@@ -70,7 +70,20 @@ export default function TotalPanel() {
     if (promptsInfo.data) dispatch(setPromptName(promptsInfo.data[newValue]));
   };
 
-  if (!promptsInfo.data) return null;
+  if (!promptsInfo.data || promptsInfo.isLoading || promptsInfo.isFetching)
+    return (
+      <Box
+        sx={(theme) => ({
+          flexGrow: 1,
+          display: "flex",
+          height: "100%",
+
+          border: "1px solid",
+          borderColor: theme.palette.divider,
+          borderRadius: 1,
+        })}
+      ></Box>
+    );
 
   return (
     <Box
