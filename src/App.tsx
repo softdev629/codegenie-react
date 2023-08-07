@@ -20,6 +20,7 @@ import SignupPage from "./pages/auth/signup.page";
 import TermsPage from "./pages/terms.page";
 import SigninPage from "./pages/auth/signin.page";
 import ForgotPage from "./pages/auth/forgot.page";
+import VerifyPage from "./pages/auth/verify.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -59,6 +60,7 @@ function App() {
             </Route>
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/signin" element={<SigninPage />} />
+            <Route path="/verify" element={<VerifyPage />} />
             <Route path="/forgot" element={<ForgotPage />} />
             <Route path="/terms" element={<TermsPage />} />
           </Routes>

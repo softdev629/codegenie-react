@@ -44,6 +44,15 @@ export const authApi = createApi({
         };
       },
     }),
+    verifyEmail: builder.mutation<IGenericResponse, { code: string }>({
+      query(data) {
+        return {
+          url: "verify",
+          method: "PATCH",
+          body: data,
+        };
+      },
+    }),
   }),
 });
 
@@ -51,4 +60,5 @@ export const {
   useSocialSignupMutation,
   useSignupUserMutation,
   useSigninUserMutation,
+  useVerifyEmailMutation,
 } = authApi;

@@ -54,7 +54,7 @@ const SigninPage = () => {
       else {
         localStorage.setItem("module", "All Code");
         dispatch(setModule("All Code"));
-        navigate("/products/all_code");
+        navigate("/codegenie/all_code");
       }
     }
     if (signinState.isError) {
