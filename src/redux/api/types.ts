@@ -59,3 +59,16 @@ export interface IPromptRunSchema {
   product_module: string;
   code: string;
 }
+
+export interface ISocialSignupSchema {
+  provider: string;
+  email?: string | null;
+  username?: string | null;
+  name: string;
+}
+
+export interface ISigninReseponseSchema {
+  access_token: string;
+  role: string;
+  verified: boolean;
+}

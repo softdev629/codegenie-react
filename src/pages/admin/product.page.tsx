@@ -109,28 +109,21 @@ const ProductConfigurator = () => {
 
   useEffect(() => {
     const { data } = getState;
-    setValue("product_name", data?.product_name ? data.product_name : "");
-    setValue("product_module", data?.product_module ? data.product_module : "");
-    setValue(
-      "module_description",
-      data?.module_description ? data.module_description : ""
-    );
-    setValue("source_text", data?.source_text ? data.source_text : "");
-    setValue("source_image", data?.source_image ? data.source_image : "");
-    setValue("source_url", data?.source_url ? data.source_url : "");
-    setValue(
-      "input_box_title",
-      data?.input_box_title ? data.input_box_title : ""
-    );
-    setValue(
-      "input_box_description",
-      data?.input_box_description ? data.input_box_description : ""
-    );
-    setValue("export_word", data?.export_word ? data.export_word : "");
-    setValue("export_pdf", data?.export_pdf ? data.export_pdf : "");
-    setValue("export_text", data?.export_text ? data.export_text : "");
-    setCheckedSources(data?.source_check ? data.source_check : []);
-    setCheckedExports(data?.export_check ? data.export_check : []);
+    if (data) {
+      setValue("product_name", data.product_name);
+      setValue("product_module", data.product_module);
+      setValue("module_description", data.module_description);
+      setValue("source_text", data.source_text);
+      setValue("source_image", data.source_image);
+      setValue("source_url", data.source_url);
+      setValue("input_box_title", data.input_box_title);
+      setValue("input_box_description", data.input_box_description);
+      setValue("export_word", data.export_word);
+      setValue("export_pdf", data.export_pdf);
+      setValue("export_text", data.export_text);
+      setCheckedSources(data.source_check ? data.source_check : []);
+      setCheckedExports(data.export_check ? data.export_check : []);
+    }
   }, [getState, setValue]);
 
   const onSubmitHandler: SubmitHandler<ProductSettingSaveInput> = (

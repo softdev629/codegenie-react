@@ -19,6 +19,7 @@ import LandingPage from "./pages/landing.page";
 import SignupPage from "./pages/auth/signup.page";
 import TermsPage from "./pages/terms.page";
 import SigninPage from "./pages/auth/signin.page";
+import ForgotPage from "./pages/auth/forgot.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -41,8 +42,8 @@ function App() {
           <ToastContainer />
           <CssBaseline />
           <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/" element={<Layout type="user" />}>
-              <Route path="" element={<LandingPage />} />
               <Route path="codegenie/:module" element={<GeniePage />} />
             </Route>
             <Route path="/admin" element={<Layout type="admin" />}>
@@ -58,6 +59,7 @@ function App() {
             </Route>
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/signin" element={<SigninPage />} />
+            <Route path="/forgot" element={<ForgotPage />} />
             <Route path="/terms" element={<TermsPage />} />
           </Routes>
         </ThemeProvider>

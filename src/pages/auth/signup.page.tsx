@@ -9,9 +9,18 @@ import {
   FormControl,
   TextField,
   Checkbox,
-  Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import {
+  LoginSocialGoogle,
+  LoginSocialGithub,
+  IResolveParams,
+} from "reactjs-social-login";
+import { toast } from "react-toastify";
+import { object, string, TypeOf } from "zod";
+import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as GoogleIcon } from "../../assets/ico_google.svg";
 import { ReactComponent as FacebookIcon } from "../../assets/ico_facebook.svg";
@@ -22,7 +31,81 @@ import { ReactComponent as LinkedinIcon } from "../../assets/ico_linkedin.svg";
 import BackSignup from "../../assets/back_signup.png";
 import Logo from "../../assets/logo_white.png";
 
+import {
+  useSignupUserMutation,
+  useSocialSignupMutation,
+} from "../../redux/api/authApi";
+import { useEffect, useState } from "react";
+import { LoadingButton } from "@mui/lab";
+
+const signupSchema = object({
+  name: string().min(1, "Full name is required"),
+  email: string()
+    .min(1, "Email address is required")
+    .email("Email address is invalid"),
+  password: string()
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters"),
+  passwordConfirm: string().min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.passwordConfirm, {
+  path: ["passwordConfirm"],
+  message: "Passwords do not match",
+});
+
+export type SignupInput = TypeOf<typeof signupSchema>;
+
 const SignupPage = () => {
+  const [termsCheck, setTermsCheck] = useState(false);
+
+  const [signupSocial, socialState] = useSocialSignupMutation();
+  const [signupUser, signupState] = useSignupUserMutation();
+
+  const navigate = useNavigate();
+
+  const methods = useForm<SignupInput>({
+    resolver: zodResolver(signupSchema),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
+
+  useEffect(() => {
+    if (socialState.isSuccess) {
+      toast.success("Social singup success");
+      navigate("/signin");
+    }
+    if (socialState.isError) {
+      if (Array.isArray((socialState.error as any).data.detail)) {
+        (socialState.error as any).data.detail.map((el: any) =>
+          toast.error(`${el.loc[1]} ${el.msg}`)
+        );
+      } else toast.error((socialState.error as any).data.detail);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socialState]);
+
+  useEffect(() => {
+    if (signupState.isSuccess) {
+      toast.success("User created successfully");
+      navigate("/signin");
+    }
+    if (signupState.isError) {
+      if (Array.isArray((signupState.error as any).data.detail)) {
+        (signupState.error as any).data.detail.map((el: any) =>
+          toast.error(`${el.loc[1]} ${el.msg}`)
+        );
+      } else toast.error((signupState.error as any).data.detail);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signupState]);
+
+  const onSubmitHandler: SubmitHandler<SignupInput> = (values) => {
+    signupUser(values);
+  };
+
   return (
     <>
       <Container maxWidth="xl">
@@ -78,9 +161,25 @@ const SignupPage = () => {
                   border="1px solid #CACBCC"
                   borderRadius="50%"
                 >
-                  <SvgIcon>
-                    <GoogleIcon />
-                  </SvgIcon>
+                  <LoginSocialGoogle
+                    client_id={process.env.REACT_APP_GG_APP_ID || ""}
+                    onResolve={({ provider, data }: IResolveParams) => {
+                      console.log(data);
+                      if (data)
+                        signupSocial({
+                          provider: provider as string,
+                          email: data.email as string,
+                          name: data.name as string,
+                        });
+                    }}
+                    onReject={(err) => {
+                      console.log(err);
+                    }}
+                  >
+                    <SvgIcon>
+                      <GoogleIcon />
+                    </SvgIcon>
+                  </LoginSocialGoogle>
                 </Box>
                 <Box
                   width={56}
@@ -117,9 +216,26 @@ const SignupPage = () => {
                   border="1px solid #CACBCC"
                   borderRadius="50%"
                 >
-                  <SvgIcon>
-                    <GithubIcon />
-                  </SvgIcon>
+                  <LoginSocialGithub
+                    client_id={process.env.REACT_APP_GITHUB_APP_ID || ""}
+                    client_secret={
+                      process.env.REACT_APP_GITHUB_APP_SECRET || ""
+                    }
+                    onReject={(err) => console.log(err)}
+                    redirect_uri={window.location.href}
+                    onResolve={({ provider, data }: IResolveParams) => {
+                      if (data)
+                        signupSocial({
+                          provider: provider as string,
+                          username: data.login as string,
+                          name: data.name,
+                        });
+                    }}
+                  >
+                    <SvgIcon>
+                      <GithubIcon />
+                    </SvgIcon>
+                  </LoginSocialGithub>
                 </Box>
                 <Box
                   width={56}
@@ -146,58 +262,95 @@ const SignupPage = () => {
                 <Typography>Or</Typography>
                 <Divider sx={{ flexGrow: 1 }} />
               </Stack>
-              <Stack gap={3}>
-                <FormControl fullWidth>
-                  <Typography mb={1} color="text.secondary">
-                    Name
-                  </Typography>
-                  <TextField placeholder="Enter full name" />
-                </FormControl>
-                <FormControl fullWidth>
-                  <Typography mb={1} color="text.secondary">
-                    Email address
-                  </Typography>
-                  <TextField type="email" placeholder="Enter full name" />
-                </FormControl>
-                <FormControl fullWidth>
-                  <Typography mb={1} color="text.secondary">
-                    Password
-                  </Typography>
-                  <TextField type="password" placeholder="Enter full name" />
-                </FormControl>
-                <FormControl fullWidth>
-                  <Typography mb={1} color="text.secondary">
-                    Confirm Password
-                  </Typography>
-                  <TextField type="password" placeholder="Enter full name" />
-                </FormControl>
-                <Box display="flex" alignItems="center">
-                  <Checkbox />{" "}
-                  <Typography>
-                    I agree to the{" "}
-                    <Link
-                      to="/terms"
-                      style={{
-                        color: "#0168B5",
-                      }}
-                    >
-                      Terms & Privacy Policy
-                    </Link>
-                  </Typography>
+              <FormProvider {...methods}>
+                <Box
+                  component="form"
+                  noValidate
+                  onSubmit={handleSubmit(onSubmitHandler)}
+                >
+                  <Stack gap={3}>
+                    <FormControl fullWidth>
+                      <Typography mb={1} color="text.secondary">
+                        Name
+                      </Typography>
+                      <TextField
+                        {...register("name")}
+                        placeholder="Enter full name"
+                        error={!!errors["name"]}
+                        helperText={errors["name"]?.message}
+                      />
+                    </FormControl>
+                    <FormControl fullWidth>
+                      <Typography mb={1} color="text.secondary">
+                        Email address
+                      </Typography>
+                      <TextField
+                        {...register("email")}
+                        type="email"
+                        placeholder="Enter your email"
+                        error={!!errors["email"]}
+                        helperText={errors["email"]?.message}
+                      />
+                    </FormControl>
+                    <FormControl fullWidth>
+                      <Typography mb={1} color="text.secondary">
+                        Password
+                      </Typography>
+                      <TextField
+                        {...register("password")}
+                        type="password"
+                        placeholder="min 8 characters"
+                        error={!!errors["password"]}
+                        helperText={errors["password"]?.message}
+                      />
+                    </FormControl>
+                    <FormControl fullWidth>
+                      <Typography mb={1} color="text.secondary">
+                        Confirm Password
+                      </Typography>
+                      <TextField
+                        {...register("passwordConfirm")}
+                        type="password"
+                        placeholder="Same as previous"
+                        error={!!errors["passwordConfirm"]}
+                        helperText={errors["passwordConfirm"]?.message}
+                      />
+                    </FormControl>
+                    <Box display="flex" alignItems="center">
+                      <Checkbox
+                        value={termsCheck}
+                        onChange={(e) => setTermsCheck(e.target.checked)}
+                      />{" "}
+                      <Typography>
+                        I agree to the{" "}
+                        <Link
+                          to="/terms"
+                          style={{
+                            color: "#0168B5",
+                          }}
+                        >
+                          Terms & Privacy Policy
+                        </Link>
+                      </Typography>
+                    </Box>
+                  </Stack>
+                  <LoadingButton
+                    fullWidth
+                    sx={{
+                      height: 56,
+                      background:
+                        "linear-gradient(90deg, #036AB7 0%, #4BA5EB 100%)",
+                      color: "white",
+                      mt: 4,
+                    }}
+                    loading={signupState.isLoading}
+                    type="submit"
+                    disabled={!termsCheck}
+                  >
+                    Sign Up
+                  </LoadingButton>
                 </Box>
-              </Stack>
-              <Button
-                fullWidth
-                sx={{
-                  height: 56,
-                  background:
-                    "linear-gradient(90deg, #036AB7 0%, #4BA5EB 100%)",
-                  color: "white",
-                  mt: 4,
-                }}
-              >
-                Sign Up
-              </Button>
+              </FormProvider>
               <Typography mt={3}>
                 Have an account?{" "}
                 <Link

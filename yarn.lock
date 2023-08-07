@@ -8397,6 +8397,11 @@ react@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
 
+reactjs-social-login@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/reactjs-social-login/-/reactjs-social-login-2.6.2.tgz#fffa8a8d216bcb373433322e1fe7328318c80177"
+  integrity sha512-7ngl3qMbnRkXJznsdd/fwCXLwE1wBpeLhaAZJlZF0Wki7tl9nwFL191t+uopZkSBnWuHRCBhmOGgT/y9KVSJAg==
+
 read-cache@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/read-cache/-/read-cache-1.0.0.tgz#e664ef31161166c9751cdbe8dbcf86b5fb58f774"

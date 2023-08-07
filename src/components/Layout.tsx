@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
-import AdminHeader from "./AdminHeader";
+import Header from "./headers/Header";
+import AdminHeader from "./headers/AdminHeader";
 
 const Layout = (props: { type: "admin" | "user" }) => {
   return (

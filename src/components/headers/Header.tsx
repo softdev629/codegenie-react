@@ -17,15 +17,15 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
-import { ReactComponent as Logo } from "../logo.svg";
-import { ReactComponent as CrownIcon } from "../assets/ico_crown.svg";
-import { ReactComponent as ProductIcon } from "../assets/ico_product.svg";
-import { ReactComponent as DownIcon } from "../assets/ico_downarr.svg";
+import { ReactComponent as Logo } from "../../logo.svg";
+import { ReactComponent as CrownIcon } from "../../assets/ico_crown.svg";
+import { ReactComponent as ProductIcon } from "../../assets/ico_product.svg";
+import { ReactComponent as DownIcon } from "../../assets/ico_downarr.svg";
 
-import { ColorModeContext } from "../theme";
-import { useLazyGetModulesQuery } from "../redux/api/productApi";
-import { useAppDispatch } from "../redux/store";
-import { setModule } from "../redux/features/genieSlice";
+import { ColorModeContext } from "../../theme";
+import { useLazyGetModulesQuery } from "../../redux/api/productApi";
+import { useAppDispatch } from "../../redux/store";
+import { setModule } from "../../redux/features/genieSlice";
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 32,

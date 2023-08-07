@@ -2,10 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 import { productApi } from "./api/productApi";
 import { promptApi } from "./api/promptApi";
+import { authApi } from "./api/authApi";
 import genieReducer from "./features/genieSlice";
 
 export const store = configureStore({
   reducer: {
+    [authApi.reducerPath]: authApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [promptApi.reducerPath]: promptApi.reducer,
     genieState: genieReducer,
@@ -15,6 +17,7 @@ export const store = configureStore({
     getDefaultMiddleware({}).concat([
       productApi.middleware,
       promptApi.middleware,
+      authApi.middleware,
     ]),
 });
 
