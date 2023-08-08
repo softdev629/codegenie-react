@@ -7,6 +7,7 @@ import {
 } from "./types";
 import { SignupInput } from "../../pages/auth/signup.page";
 import { SigninInput } from "../../pages/auth/signin.page";
+import { userApi } from "./userApi";
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
 
@@ -42,6 +43,12 @@ export const authApi = createApi({
           body: data,
           credentials: "include",
         };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          await dispatch(userApi.endpoints.getMe.initiate(null));
+        } catch (error) {}
       },
     }),
     verifyEmail: builder.mutation<IGenericResponse, { code: string }>({

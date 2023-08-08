@@ -58,12 +58,14 @@ const SigninPage = () => {
       }
     }
     if (signinState.isError) {
+      console.log(signinState);
       if (Array.isArray((signinState.error as any).data.detail)) {
         (signinState.error as any).data.detail.map((el: any) =>
           toast.error(`${el.loc[1]} ${el.msg}`)
         );
       } else toast.error((signinState.error as any).data.detail);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signinState]);
 
   const methods = useForm<SigninInput>({

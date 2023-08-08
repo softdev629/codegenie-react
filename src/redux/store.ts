@@ -4,13 +4,17 @@ import { productApi } from "./api/productApi";
 import { promptApi } from "./api/promptApi";
 import { authApi } from "./api/authApi";
 import genieReducer from "./features/genieSlice";
+import userReducer from "./features/userSlice";
+import { userApi } from "./api/userApi";
 
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [promptApi.reducerPath]: promptApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
     genieState: genieReducer,
+    userState: userReducer,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
@@ -18,6 +22,7 @@ export const store = configureStore({
       productApi.middleware,
       promptApi.middleware,
       authApi.middleware,
+      userApi.middleware,
     ]),
 });
 

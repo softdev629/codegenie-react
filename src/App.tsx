@@ -17,7 +17,7 @@ import ContentGenerator from "./pages/admin/blogcreate.page";
 import GeniePage from "./pages/genie.page";
 import LandingPage from "./pages/landing.page";
 import SignupPage from "./pages/auth/signup.page";
-import TermsPage from "./pages/terms.page";
+import TermsPage from "./pages/auth/terms.page";
 import SigninPage from "./pages/auth/signin.page";
 import ForgotPage from "./pages/auth/forgot.page";
 import VerifyPage from "./pages/auth/verify.page";

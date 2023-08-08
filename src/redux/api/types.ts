@@ -72,3 +72,11 @@ export interface ISigninReseponseSchema {
   role: string;
   verified: boolean;
 }
+
+export interface IUser {
+  provider: string;
+  name: string;
+  email: string | null;
+  role: string;
+  username: string | null;
+}

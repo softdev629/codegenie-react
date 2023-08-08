@@ -102,19 +102,7 @@ const CodeBox = styled(Box)(({ theme }) => ({
 
 const GeniePage = () => {
   const [value, setValue] = useState(0);
-  const [code, setCode] = useState(`<?php
-  session_start();
-  if(isset($_POST['submit'])){ //don't show the error if Submit button not clicked.
-  $username = filter_input(INPUT_POST,'username', FILTER_SANITIZE_SPECIAL_CHARS);
-  $password = $_POST['password'];
-  if ($username == 'john' && $password == 'password') {
-  $_SESSION['username'] = $username;
-  header('Location: /php_course/extras/dashboard.php');
-  } else {
-  echo 'Incorrect Login';
-  }
-}
-  `);
+  const [code, setCode] = useState(``);
 
   const genieSelector = useAppSelector((state) => state.genieState);
   const dipatch = useAppDispatch();
@@ -163,11 +151,13 @@ const GeniePage = () => {
   ];
 
   const {
+    module_description,
     source_check,
     source_text,
     source_image,
     source_url,
     input_box_title,
+    input_box_description,
   } = productState.data;
 
   return (
@@ -181,7 +171,8 @@ const GeniePage = () => {
         </Breadcrumbs>
         <Divider />
         <Grid container flexGrow={1}>
-          <Grid item xs={5} paddingTop={5} paddingRight={2}>
+          <Grid item xs={5} paddingTop={2} paddingRight={2}>
+            <Typography mb={3}>{module_description}</Typography>
             <Stack spacing={3} height="100%">
               <Tabs
                 onChange={(e: React.SyntheticEvent, newValue: number) =>
@@ -246,7 +237,7 @@ const GeniePage = () => {
                 <CodeEditor
                   value={code}
                   language="js"
-                  placeholder="Please enter JS code."
+                  placeholder={input_box_description}
                   onChange={(evn) => setCode(evn.target.value)}
                   padding={15}
                   style={{
@@ -276,6 +267,10 @@ const GeniePage = () => {
                     width: "fit-content",
                   }}
                   onClick={() => {
+                    if (code === "") {
+                      toast.error("No empty code!");
+                      return;
+                    }
                     runPrompt({
                       product_name: "CodeGenie",
                       product_module: genieSelector.module

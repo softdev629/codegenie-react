@@ -33,7 +33,11 @@ const VerifyPage = () => {
     resolver: zodResolver(verifySchema),
   });
 
-  const { register, handleSubmit, formState } = methods;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
 
   const onSubmitHandler: SubmitHandler<VerifyInput> = (values) => {
     verifyEmail(values);
@@ -53,6 +57,7 @@ const VerifyPage = () => {
         );
       } else toast.error((verifyState.error as any).data.detail);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verifyState]);
 
   return (
@@ -74,6 +79,8 @@ const VerifyPage = () => {
                   fullWidth
                   size="small"
                   placeholder="Verify code"
+                  error={!!errors["code"]}
+                  helperText={errors["code"]?.message}
                 />
                 <LoadingButton
                   fullWidth
