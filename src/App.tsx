@@ -21,6 +21,8 @@ import TermsPage from "./pages/auth/terms.page";
 import SigninPage from "./pages/auth/signin.page";
 import ForgotPage from "./pages/auth/forgot.page";
 import VerifyPage from "./pages/auth/verify.page";
+import RequireUser from "./components/requireUser";
+import UnauthorizePage from "./pages/unauthorized.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -44,18 +46,22 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/" element={<Layout type="user" />}>
-              <Route path="codegenie/:module" element={<GeniePage />} />
-            </Route>
-            <Route path="/admin" element={<Layout type="admin" />}>
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="config">
-                <Route path="products" element={<ProductConfigurator />} />
-                <Route path="prompts" element={<PromptConfigurator />} />
-                <Route path="prices" element={<PriceConfigurator />} />
+            <Route element={<RequireUser allowedRoles={["admin", "user"]} />}>
+              <Route path="/" element={<Layout type="user" />}>
+                <Route path="codegenie/:module" element={<GeniePage />} />
               </Route>
-              <Route path="content">
-                <Route path="generate" element={<ContentGenerator />} />
+            </Route>
+            <Route element={<RequireUser allowedRoles={["admin"]} />}>
+              <Route path="/admin" element={<Layout type="admin" />}>
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="config">
+                  <Route path="products" element={<ProductConfigurator />} />
+                  <Route path="prompts" element={<PromptConfigurator />} />
+                  <Route path="prices" element={<PriceConfigurator />} />
+                </Route>
+                <Route path="content">
+                  <Route path="generate" element={<ContentGenerator />} />
+                </Route>
               </Route>
             </Route>
             <Route path="/signup" element={<SignupPage />} />
@@ -63,6 +69,7 @@ function App() {
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="/forgot" element={<ForgotPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/unauthorized" element={<UnauthorizePage />} />
           </Routes>
         </ThemeProvider>
       </ColorModeContext.Provider>

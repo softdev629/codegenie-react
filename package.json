@@ -59,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "babel-plugin-import": "^1.13.6",
     "customize-cra": "^1.0.0",
     "react-app-rewired": "^2.2.1"
