@@ -30,6 +30,7 @@ import { useGetProductQuery } from "../redux/api/productApi";
 import { useRunPromptMutation } from "../redux/api/promptApi";
 import { setMsg } from "../redux/features/genieSlice";
 import { useNavigate } from "react-router-dom";
+import MagicWand from "../components/MagicWand";
 
 const loadTypes = [
   {
@@ -168,7 +169,10 @@ const GeniePage = () => {
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={true}
           >
-            <CircularProgress color="inherit" />
+            <Box>
+              <MagicWand />
+              <Typography textAlign="center">Executing your wish</Typography>
+            </Box>
           </Backdrop>
         </Box>
       )}
