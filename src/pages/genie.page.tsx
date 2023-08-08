@@ -161,137 +161,149 @@ const GeniePage = () => {
   } = productState.data;
 
   return (
-    <Container maxWidth="xl" sx={{ height: "calc(100vh - 100px)" }}>
-      <Stack height="100%">
-        <Breadcrumbs
-          separator={<NavigateNext fontSize="small" />}
-          sx={{ marginY: 3 }}
-        >
-          {breadcrumbs}
-        </Breadcrumbs>
-        <Divider />
-        <Grid container flexGrow={1}>
-          <Grid item xs={5} paddingTop={2} paddingRight={2}>
-            <Typography mb={3}>{module_description}</Typography>
-            <Stack spacing={3} height="100%">
-              <Tabs
-                onChange={(e: React.SyntheticEvent, newValue: number) =>
-                  setValue(newValue)
-                }
-                value={value}
-                sx={{
-                  "& .MuiTabs-scroller .MuiTabs-flexContainer": { gap: 2 },
-                }}
-              >
-                {source_check.includes("source_text") && (
-                  <Tab
-                    sx={{
-                      width: "30%",
-                      justifyContent: "left",
-                      padding: "8px 16px",
-                      border: "1px solid",
-                      borderColor: "inherit",
-                      borderRadius: 1,
-                    }}
-                    iconPosition="start"
-                    icon={loadTypes[0].icon}
-                    label={source_text}
-                  />
-                )}
-                {source_check.includes("source_image") && (
-                  <Tab
-                    sx={{
-                      width: "30%",
-                      justifyContent: "left",
-                      padding: "8px 16px",
-                      border: "1px solid",
-                      borderColor: "inherit",
-                      borderRadius: 1,
-                    }}
-                    iconPosition="start"
-                    icon={loadTypes[1].icon}
-                    label={source_image}
-                  />
-                )}
-                {source_check.includes("source_url") && (
-                  <Tab
-                    sx={{
-                      width: "30%",
-                      justifyContent: "left",
-                      padding: "8px 16px",
-                      border: "1px solid",
-                      borderColor: "inherit",
-                      borderRadius: 1,
-                    }}
-                    iconPosition="start"
-                    icon={loadTypes[2].icon}
-                    label={source_url}
-                  />
-                )}
-              </Tabs>
-              <Typography variant="h4" color="text.secondary">
-                {input_box_title}
-              </Typography>
-
-              <CodeBox>
-                <CodeEditor
-                  value={code}
-                  language="js"
-                  placeholder={input_box_description}
-                  onChange={(evn) => setCode(evn.target.value)}
-                  padding={15}
-                  style={{
-                    fontSize: 16,
-                    backgroundColor: "inherit",
-                    fontFamily:
-                      "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
-                  }}
-                />
-              </CodeBox>
-              <Stack alignItems="end">
-                <LoadingButton
-                  startIcon={
-                    <SvgIcon>
-                      <WishIcon />
-                    </SvgIcon>
+    <>
+      {runState.isLoading && (
+        <Box position="absolute">
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </Box>
+      )}
+      <Container maxWidth="xl" sx={{ height: "calc(100vh - 100px)" }}>
+        <Stack height="100%">
+          <Breadcrumbs
+            separator={<NavigateNext fontSize="small" />}
+            sx={{ marginY: 3 }}
+          >
+            {breadcrumbs}
+          </Breadcrumbs>
+          <Divider />
+          <Grid container flexGrow={1}>
+            <Grid item xs={5} paddingTop={2} paddingRight={2}>
+              <Typography mb={3}>{module_description}</Typography>
+              <Stack spacing={3} height="100%">
+                <Tabs
+                  onChange={(e: React.SyntheticEvent, newValue: number) =>
+                    setValue(newValue)
                   }
-                  loading={runState.isLoading}
+                  value={value}
                   sx={{
-                    background:
-                      "linear-gradient(270deg, #4BA5EB 0%, #0168B5 100%)",
-                    marginLeft: 5,
-                    color: "white",
-                    paddingX: "20px",
-                    paddingY: "12px",
-                    borderRadius: "4px",
-                    width: "fit-content",
-                  }}
-                  onClick={() => {
-                    if (code === "") {
-                      toast.error("No empty code!");
-                      return;
-                    }
-                    runPrompt({
-                      product_name: "CodeGenie",
-                      product_module: genieSelector.module
-                        ? genieSelector.module
-                        : "",
-                      code: code,
-                    });
+                    "& .MuiTabs-scroller .MuiTabs-flexContainer": { gap: 2 },
                   }}
                 >
-                  Execute Wish
-                </LoadingButton>
+                  {source_check.includes("source_text") && (
+                    <Tab
+                      sx={{
+                        width: "30%",
+                        justifyContent: "left",
+                        padding: "8px 16px",
+                        border: "1px solid",
+                        borderColor: "inherit",
+                        borderRadius: 1,
+                      }}
+                      iconPosition="start"
+                      icon={loadTypes[0].icon}
+                      label={source_text}
+                    />
+                  )}
+                  {source_check.includes("source_image") && (
+                    <Tab
+                      sx={{
+                        width: "30%",
+                        justifyContent: "left",
+                        padding: "8px 16px",
+                        border: "1px solid",
+                        borderColor: "inherit",
+                        borderRadius: 1,
+                      }}
+                      iconPosition="start"
+                      icon={loadTypes[1].icon}
+                      label={source_image}
+                    />
+                  )}
+                  {source_check.includes("source_url") && (
+                    <Tab
+                      sx={{
+                        width: "30%",
+                        justifyContent: "left",
+                        padding: "8px 16px",
+                        border: "1px solid",
+                        borderColor: "inherit",
+                        borderRadius: 1,
+                      }}
+                      iconPosition="start"
+                      icon={loadTypes[2].icon}
+                      label={source_url}
+                    />
+                  )}
+                </Tabs>
+                <Typography variant="h4" color="text.secondary">
+                  {input_box_title}
+                </Typography>
+
+                <CodeBox>
+                  <CodeEditor
+                    value={code}
+                    language="js"
+                    placeholder={input_box_description}
+                    onChange={(evn) => setCode(evn.target.value)}
+                    padding={15}
+                    style={{
+                      fontSize: 16,
+                      backgroundColor: "inherit",
+                      fontFamily:
+                        "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
+                    }}
+                  />
+                </CodeBox>
+                <Stack alignItems="end">
+                  <LoadingButton
+                    startIcon={
+                      <SvgIcon>
+                        <WishIcon />
+                      </SvgIcon>
+                    }
+                    loading={runState.isLoading}
+                    sx={{
+                      background:
+                        "linear-gradient(270deg, #4BA5EB 0%, #0168B5 100%)",
+                      marginLeft: 5,
+                      color: "white",
+                      paddingX: "20px",
+                      paddingY: "12px",
+                      borderRadius: "4px",
+                      width: "fit-content",
+                    }}
+                    onClick={() => {
+                      if (code === "") {
+                        toast.error("No empty code!");
+                        return;
+                      }
+                      runPrompt({
+                        product_name: "CodeGenie",
+                        product_module: genieSelector.module
+                          ? genieSelector.module
+                          : "",
+                        code: code,
+                      });
+                    }}
+                  >
+                    Execute Wish
+                  </LoadingButton>
+                </Stack>
               </Stack>
-            </Stack>
+            </Grid>
+            <Divider orientation="vertical" />
+            <Grid item xs={6.9} pl="24px" pt="40px">
+              <TotalPanel />
+            </Grid>
           </Grid>
-          <Divider orientation="vertical" />
-          <Grid item xs={6.9} pl="24px" pt="40px">
-            <TotalPanel />
-          </Grid>
-        </Grid>
-      </Stack>
-    </Container>
+        </Stack>
+      </Container>
+    </>
   );
 };
 
