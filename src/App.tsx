@@ -23,6 +23,7 @@ import ForgotPage from "./pages/auth/forgot.page";
 import VerifyPage from "./pages/auth/verify.page";
 import RequireUser from "./components/requireUser";
 import UnauthorizePage from "./pages/unauthorized.page";
+import PricingPage from "./pages/pricing.page";
 
 function App() {
   const [mode, setMode] = useState<PaletteMode>("light");
@@ -49,6 +50,7 @@ function App() {
             <Route element={<RequireUser allowedRoles={["admin", "user"]} />}>
               <Route path="/" element={<Layout type="user" />}>
                 <Route path="codegenie/:module" element={<GeniePage />} />
+                <Route path="pricing" element={<PricingPage />} />
               </Route>
             </Route>
             <Route element={<RequireUser allowedRoles={["admin"]} />}>

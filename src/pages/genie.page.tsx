@@ -19,6 +19,9 @@ import { styled } from "@mui/material/styles";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { object, TypeOf, z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ReactComponent as TextIcon } from "../assets/ico_text.svg";
 import { ReactComponent as ImageIcon } from "../assets/ico_image.svg";
@@ -100,6 +103,10 @@ const CodeBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#2D2D2D" : "#fff",
   },
 }));
+
+const imageUploadSchema = object({
+  image: z.instanceof(File),
+});
 
 const GeniePage = () => {
   const [value, setValue] = useState(0);

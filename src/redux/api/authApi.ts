@@ -26,7 +26,14 @@ export const authApi = createApi({
           url: "social",
           method: "POST",
           body: data,
+          credentials: "include",
         };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          await dispatch(userApi.endpoints.getMe.initiate(null));
+        } catch (error) {}
       },
     }),
     signupUser: builder.mutation<IGenericResponse, SignupInput>({

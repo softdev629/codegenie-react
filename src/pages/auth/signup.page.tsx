@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Grid,
   Box,
@@ -21,6 +22,7 @@ import { object, string, TypeOf } from "zod";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 import { ReactComponent as GoogleIcon } from "../../assets/ico_google.svg";
 import { ReactComponent as FacebookIcon } from "../../assets/ico_facebook.svg";
@@ -35,8 +37,6 @@ import {
   useSignupUserMutation,
   useSocialAuthMutation,
 } from "../../redux/api/authApi";
-import { useEffect, useState } from "react";
-import { LoadingButton } from "@mui/lab";
 import { useAppDispatch } from "../../redux/store";
 import { setModule } from "../../redux/features/genieSlice";
 
@@ -173,7 +173,6 @@ const SignupPage = () => {
                   <LoginSocialGoogle
                     client_id={process.env.REACT_APP_GG_APP_ID || ""}
                     onResolve={({ provider, data }: IResolveParams) => {
-                      console.log(data);
                       if (data)
                         authSocial({
                           provider: provider as string,

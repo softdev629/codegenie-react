@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Container,
   Grid,
@@ -19,6 +20,7 @@ import {
   LoginSocialGithub,
   IResolveParams,
 } from "reactjs-social-login";
+import { LoadingButton } from "@mui/lab";
 
 import BackSignin from "../../assets/back_signin.png";
 import Logo from "../../logo.svg";
@@ -29,11 +31,12 @@ import { ReactComponent as TwitterIcon } from "../../assets/ico_twtter.svg";
 import { ReactComponent as GithubIcon } from "../../assets/ico_github.svg";
 import { ReactComponent as LinkedinIcon } from "../../assets/ico_linkedin.svg";
 
-import { useSigninUserMutation } from "../../redux/api/authApi";
-import { useEffect } from "react";
+import {
+  useSigninUserMutation,
+  useSocialAuthMutation,
+} from "../../redux/api/authApi";
 import { useAppDispatch } from "../../redux/store";
 import { setModule } from "../../redux/features/genieSlice";
-import { LoadingButton } from "@mui/lab";
 
 const signinSchema = object({
   email: string()
@@ -51,6 +54,7 @@ const SigninPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
+  const [authSocial, socialState] = useSocialAuthMutation();
 
   useEffect(() => {
     if (signinState.isSuccess) {
@@ -76,6 +80,27 @@ const SigninPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signinState]);
+
+  useEffect(() => {
+    if (socialState.isSuccess) {
+      toast.success("Social singup success");
+      if (socialState.data.role === "user") {
+        localStorage.setItem("module", "All Code");
+        dispatch(setModule("All Code"));
+        navigate("/codegenie/all_code");
+      } else {
+        navigate("/admin/dashboard");
+      }
+    }
+    if (socialState.isError) {
+      if (Array.isArray((socialState.error as any).data.detail)) {
+        (socialState.error as any).data.detail.map((el: any) =>
+          toast.error(`${el.loc[1]} ${el.msg}`)
+        );
+      } else toast.error((socialState.error as any).data.detail);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socialState]);
 
   const methods = useForm<SigninInput>({
     resolver: zodResolver(signinSchema),
@@ -219,7 +244,12 @@ const SigninPage = () => {
                   <LoginSocialGoogle
                     client_id={process.env.REACT_APP_GG_APP_ID || ""}
                     onResolve={({ provider, data }: IResolveParams) => {
-                      console.log(data);
+                      if (data)
+                        authSocial({
+                          provider: provider as string,
+                          email: data.email as string,
+                          name: data.name as string,
+                        });
                     }}
                     onReject={(err) => {
                       console.log(err);
@@ -273,7 +303,12 @@ const SigninPage = () => {
                     onReject={(err) => console.log(err)}
                     redirect_uri={window.location.href}
                     onResolve={({ provider, data }: IResolveParams) => {
-                      console.log(data);
+                      if (data)
+                        authSocial({
+                          provider: provider as string,
+                          username: data.login as string,
+                          name: data.name,
+                        });
                     }}
                   >
                     <SvgIcon>
