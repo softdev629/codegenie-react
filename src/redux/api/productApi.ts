@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import customFetchBase from "./customFetchBase";
+
 import { ProductSettingSaveInput } from "../../pages/admin/product.page";
 import { PriceSettingSaveInput } from "../../pages/admin/price.page";
 import {
@@ -8,19 +10,15 @@ import {
   IProductHeadings,
 } from "./types";
 
-const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
-
 export const productApi = createApi({
   reducerPath: "productApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/products/`,
-  }),
+  baseQuery: customFetchBase,
   tagTypes: ["Product"],
   endpoints: (builder) => ({
     getProduct: builder.query<IProduct, IProductHeadings>({
       query({ product_name, product_module }) {
         return {
-          url: `?product_name=${product_name}&product_module=${product_module}`,
+          url: `products?product_name=${product_name}&product_module=${product_module}`,
         };
       },
       transformResponse: (results: { data: IProduct }) => results.data,
@@ -29,7 +27,7 @@ export const productApi = createApi({
     addProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
       query(data) {
         return {
-          url: "",
+          url: "products",
           method: "POST",
           body: data,
         };
@@ -39,7 +37,7 @@ export const productApi = createApi({
     updateProduct: builder.mutation<IGenericResponse, ProductSettingSaveInput>({
       query(data) {
         return {
-          url: "",
+          url: "products",
           method: "PATCH",
           body: data,
         };
@@ -49,7 +47,7 @@ export const productApi = createApi({
     searchProduct: builder.query<IProductHeadings[], string>({
       query(searchKey: string) {
         return {
-          url: `search?search_key=${searchKey}`,
+          url: `products/search?search_key=${searchKey}`,
         };
       },
       transformResponse: (results: { data: IProductHeadings[] }) =>
@@ -58,7 +56,7 @@ export const productApi = createApi({
     updatePrice: builder.mutation<IGenericResponse, PriceSettingSaveInput>({
       query(data) {
         return {
-          url: "update_price",
+          url: "products/update_price",
           method: "PATCH",
           body: data,
         };
@@ -67,7 +65,7 @@ export const productApi = createApi({
     getProductsNames: builder.query<string[], void>({
       query() {
         return {
-          url: "names",
+          url: "products/names",
           method: "GET",
         };
       },
@@ -76,7 +74,7 @@ export const productApi = createApi({
     getModules: builder.query<string[], string>({
       query(product_name: string) {
         return {
-          url: `modules?product_name=${product_name}`,
+          url: `products/modules?product_name=${product_name}`,
           method: "GET",
         };
       },
@@ -89,7 +87,7 @@ export const productApi = createApi({
     >({
       query({ product_name, product_module }) {
         return {
-          url: `prices?product_name=${product_name}&product_module=${product_module}`,
+          url: `products/prices?product_name=${product_name}&product_module=${product_module}`,
           method: "GET",
         };
       },

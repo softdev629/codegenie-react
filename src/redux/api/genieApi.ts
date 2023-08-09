@@ -1,14 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import { createApi } from "@reduxjs/toolkit/query/react";
+import customFetchBase from "./customFetchBase";
 import { IGenericResponse } from "./types";
-
-const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
 
 export const genieApi = createApi({
   reducerPath: "",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/genie/`,
-  }),
+  baseQuery: customFetchBase,
   endpoints: (builder) => ({}),
 });
 

@@ -42,8 +42,10 @@ const LandingHeader = () => {
   }, []);
 
   useEffect(() => {
-    if (getState.isSuccess)
+    if (getState.isSuccess) {
       setModules(getState.data.filter((item) => item !== ""));
+      dispatch(setModule(getState.data[0]));
+    }
   }, [getState]);
 
   const open = Boolean(anchorEl);

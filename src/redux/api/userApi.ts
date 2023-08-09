@@ -1,20 +1,18 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import customFetchBase from "./customFetchBase";
+
 import { setUser } from "../features/userSlice";
 import { IUser } from "./types";
 
-const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
-
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/users/`,
-  }),
+  baseQuery: customFetchBase,
   tagTypes: ["User"],
   endpoints: (builder) => ({
     getMe: builder.query<IUser, null>({
       query() {
         return {
-          url: "me",
+          url: "users/me",
           credentials: "include",
         };
       },

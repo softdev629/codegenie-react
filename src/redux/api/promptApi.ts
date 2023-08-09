@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import customFetchBase from "./customFetchBase";
+
 import {
   IGenericResponse,
   IPromptAcceptSchema,
@@ -6,19 +8,15 @@ import {
 } from "./types";
 import { IPromptSchema } from "../../components/Prompt";
 
-const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
-
 export const promptApi = createApi({
   reducerPath: "promptApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/prompts/`,
-  }),
+  baseQuery: customFetchBase,
   tagTypes: ["Prompt"],
   endpoints: (builder) => ({
     addPrompt: builder.mutation<IGenericResponse, IPromptSchema>({
       query(data) {
         return {
-          url: "",
+          url: "prompts",
           method: "POST",
           body: data,
         };
@@ -28,7 +26,7 @@ export const promptApi = createApi({
     getPrompts: builder.query<IPromptAcceptSchema[], void>({
       query() {
         return {
-          url: "",
+          url: "prompts",
           method: "GET",
         };
       },
@@ -42,7 +40,7 @@ export const promptApi = createApi({
     >({
       query({ id, info }) {
         return {
-          url: `${id}`,
+          url: `prompts/${id}`,
           method: "PATCH",
           body: info,
         };
@@ -55,7 +53,7 @@ export const promptApi = createApi({
     >({
       query({ product_name, product_module }) {
         return {
-          url: `names?product_name=${product_name}&product_module=${product_module}`,
+          url: `prompts/names?product_name=${product_name}&product_module=${product_module}`,
         };
       },
       transformResponse: (results: { data: { prompt_name: string }[] }) =>
@@ -64,7 +62,7 @@ export const promptApi = createApi({
     runPrompt: builder.mutation<Array<any>, IPromptRunSchema>({
       query(data) {
         return {
-          url: "run",
+          url: "prompts/run",
           method: "POST",
           body: data,
         };

@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import { createApi } from "@reduxjs/toolkit/query/react";
+import customFetchBase from "./customFetchBase";
 import {
   IGenericResponse,
   ISigninReseponseSchema,
@@ -9,13 +9,9 @@ import { SignupInput } from "../../pages/auth/signup.page";
 import { SigninInput } from "../../pages/auth/signin.page";
 import { userApi } from "./userApi";
 
-const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
-
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/auth/`,
-  }),
+  baseQuery: customFetchBase,
   endpoints: (builder) => ({
     socialAuth: builder.mutation<
       { access_token: string; role: string },
@@ -23,7 +19,7 @@ export const authApi = createApi({
     >({
       query(data) {
         return {
-          url: "social",
+          url: "auth/social",
           method: "POST",
           body: data,
           credentials: "include",
@@ -39,7 +35,7 @@ export const authApi = createApi({
     signupUser: builder.mutation<IGenericResponse, SignupInput>({
       query(data) {
         return {
-          url: "signup",
+          url: "auth/signup",
           method: "POST",
           body: data,
         };
@@ -48,7 +44,7 @@ export const authApi = createApi({
     signinUser: builder.mutation<ISigninReseponseSchema, SigninInput>({
       query(data) {
         return {
-          url: "signin",
+          url: "auth/signin",
           method: "POST",
           body: data,
           credentials: "include",
@@ -64,7 +60,7 @@ export const authApi = createApi({
     verifyEmail: builder.mutation<IGenericResponse, { code: string }>({
       query(data) {
         return {
-          url: "verify",
+          url: "auth/verify",
           method: "PATCH",
           body: data,
         };

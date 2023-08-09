@@ -46,8 +46,8 @@ function App() {
           <ToastContainer />
           <CssBaseline />
           <Routes>
-            <Route path="/" element={<LandingPage />} />
             <Route element={<RequireUser allowedRoles={["admin", "user"]} />}>
+              <Route path="/" element={<LandingPage />} />
               <Route path="/" element={<Layout type="user" />}>
                 <Route path="codegenie/:module" element={<GeniePage />} />
                 <Route path="pricing" element={<PricingPage />} />
