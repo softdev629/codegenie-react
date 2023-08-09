@@ -14,6 +14,11 @@ import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
+import {
+  LoginSocialGoogle,
+  LoginSocialGithub,
+  IResolveParams,
+} from "reactjs-social-login";
 
 import BackSignin from "../../assets/back_signin.png";
 import Logo from "../../logo.svg";
@@ -52,9 +57,13 @@ const SigninPage = () => {
       toast.success("Login Success");
       if (!signinState.data.verified) navigate("/verify");
       else {
-        localStorage.setItem("module", "All Code");
-        dispatch(setModule("All Code"));
-        navigate("/codegenie/all_code");
+        if (signinState.data.role === "user") {
+          localStorage.setItem("module", "All Code");
+          dispatch(setModule("All Code"));
+          navigate("/codegenie/all_code");
+        } else {
+          navigate("/admin/dashboard");
+        }
       }
     }
     if (signinState.isError) {
@@ -207,9 +216,19 @@ const SigninPage = () => {
                   border="1px solid #CACBCC"
                   borderRadius="50%"
                 >
-                  <SvgIcon>
-                    <GoogleIcon />
-                  </SvgIcon>
+                  <LoginSocialGoogle
+                    client_id={process.env.REACT_APP_GG_APP_ID || ""}
+                    onResolve={({ provider, data }: IResolveParams) => {
+                      console.log(data);
+                    }}
+                    onReject={(err) => {
+                      console.log(err);
+                    }}
+                  >
+                    <SvgIcon>
+                      <GoogleIcon />
+                    </SvgIcon>
+                  </LoginSocialGoogle>
                 </Box>
                 <Box
                   width={56}
@@ -246,9 +265,21 @@ const SigninPage = () => {
                   border="1px solid #CACBCC"
                   borderRadius="50%"
                 >
-                  <SvgIcon>
-                    <GithubIcon />
-                  </SvgIcon>
+                  <LoginSocialGithub
+                    client_id={process.env.REACT_APP_GITHUB_APP_ID || ""}
+                    client_secret={
+                      process.env.REACT_APP_GITHUB_APP_SECRET || ""
+                    }
+                    onReject={(err) => console.log(err)}
+                    redirect_uri={window.location.href}
+                    onResolve={({ provider, data }: IResolveParams) => {
+                      console.log(data);
+                    }}
+                  >
+                    <SvgIcon>
+                      <GithubIcon />
+                    </SvgIcon>
+                  </LoginSocialGithub>
                 </Box>
                 <Box
                   width={56}

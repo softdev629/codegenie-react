@@ -33,10 +33,12 @@ import Logo from "../../assets/logo_white.png";
 
 import {
   useSignupUserMutation,
-  useSocialSignupMutation,
+  useSocialAuthMutation,
 } from "../../redux/api/authApi";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { useAppDispatch } from "../../redux/store";
+import { setModule } from "../../redux/features/genieSlice";
 
 const signupSchema = object({
   name: string().min(1, "Full name is required"),
@@ -57,10 +59,11 @@ export type SignupInput = TypeOf<typeof signupSchema>;
 const SignupPage = () => {
   const [termsCheck, setTermsCheck] = useState(false);
 
-  const [signupSocial, socialState] = useSocialSignupMutation();
+  const [authSocial, socialState] = useSocialAuthMutation();
   const [signupUser, signupState] = useSignupUserMutation();
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const methods = useForm<SignupInput>({
     resolver: zodResolver(signupSchema),
@@ -75,7 +78,13 @@ const SignupPage = () => {
   useEffect(() => {
     if (socialState.isSuccess) {
       toast.success("Social singup success");
-      navigate("/signin");
+      if (socialState.data.role === "user") {
+        localStorage.setItem("module", "All Code");
+        dispatch(setModule("All Code"));
+        navigate("/codegenie/all_code");
+      } else {
+        navigate("/admin/dashboard");
+      }
     }
     if (socialState.isError) {
       if (Array.isArray((socialState.error as any).data.detail)) {
@@ -166,7 +175,7 @@ const SignupPage = () => {
                     onResolve={({ provider, data }: IResolveParams) => {
                       console.log(data);
                       if (data)
-                        signupSocial({
+                        authSocial({
                           provider: provider as string,
                           email: data.email as string,
                           name: data.name as string,
@@ -225,7 +234,7 @@ const SignupPage = () => {
                     redirect_uri={window.location.href}
                     onResolve={({ provider, data }: IResolveParams) => {
                       if (data)
-                        signupSocial({
+                        authSocial({
                           provider: provider as string,
                           username: data.login as string,
                           name: data.name,

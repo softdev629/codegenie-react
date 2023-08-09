@@ -17,10 +17,13 @@ export const authApi = createApi({
     baseUrl: `${BASE_URL}/api/auth/`,
   }),
   endpoints: (builder) => ({
-    socialSignup: builder.mutation<IGenericResponse, ISocialSignupSchema>({
+    socialAuth: builder.mutation<
+      { access_token: string; role: string },
+      ISocialSignupSchema
+    >({
       query(data) {
         return {
-          url: "signup/social",
+          url: "social",
           method: "POST",
           body: data,
         };
@@ -64,7 +67,7 @@ export const authApi = createApi({
 });
 
 export const {
-  useSocialSignupMutation,
+  useSocialAuthMutation,
   useSignupUserMutation,
   useSigninUserMutation,
   useVerifyEmailMutation,
