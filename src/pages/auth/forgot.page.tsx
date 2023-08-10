@@ -6,16 +6,39 @@ import {
   FormControl,
   TextField,
   Box,
-  Button,
   SvgIcon,
 } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import BackSignin from "../../assets/back_signin.png";
 import Logo from "../../logo.svg";
+import { useEffect, useState } from "react";
+import { useResetPasswordMutation } from "../../redux/api/authApi";
+import { LoadingButton } from "@mui/lab";
 
 const ForgotPage = () => {
+  const [email, setEmail] = useState("");
+
+  const [resetPassword, resetState] = useResetPasswordMutation();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (resetState.isSuccess) {
+      toast.success("Password reset!");
+      navigate("/signin");
+    }
+    if (resetState.isError) {
+      if (Array.isArray((resetState.error as any).data.detail)) {
+        (resetState.error as any).data.detail.map((el: any) =>
+          toast.error(`${el.loc[1]} ${el.msg}`)
+        );
+      } else toast.error((resetState.error as any).data.detail);
+    }
+  }, [resetState]);
+
   return (
     <>
       <Container maxWidth="xl">
@@ -67,10 +90,19 @@ const ForgotPage = () => {
                   <Typography mb={1} color="text.secondary">
                     Email address
                   </Typography>
-                  <TextField type="email" placeholder="Enter your email" />
+                  <TextField
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    error={email === ""}
+                    helperText={email === "" ? "Email address is required" : ""}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
                 </FormControl>
               </Stack>
-              <Button
+              <LoadingButton
                 fullWidth
                 sx={{
                   height: 56,
@@ -79,9 +111,14 @@ const ForgotPage = () => {
                   color: "white",
                   mt: 4,
                 }}
+                onClick={() => {
+                  if (email === "") return;
+                  resetPassword({ email });
+                }}
+                loading={resetState.isLoading}
               >
                 Reset Password
-              </Button>
+              </LoadingButton>
 
               <Link
                 to="/signin"

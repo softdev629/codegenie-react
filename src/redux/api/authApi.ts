@@ -66,6 +66,15 @@ export const authApi = createApi({
         };
       },
     }),
+    resetPassword: builder.mutation<IGenericResponse, { email: string }>({
+      query(data) {
+        return {
+          url: "auth/forgot",
+          method: "PATCH",
+          body: data,
+        };
+      },
+    }),
   }),
 });
 
@@ -74,4 +83,5 @@ export const {
   useSignupUserMutation,
   useSigninUserMutation,
   useVerifyEmailMutation,
+  useResetPasswordMutation,
 } = authApi;
