@@ -8,6 +8,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { ArrowForward } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as HeroGrad } from "../assets/back_herograd.svg";
 import { ReactComponent as HeroIconsBack } from "../assets/back_heroicons.svg";
@@ -232,6 +233,8 @@ const LandingPage = () => {
   const genieSelector = useAppSelector((state) => state.genieState);
   let module_name = genieSelector.module;
 
+  const navigate = useNavigate();
+
   return (
     <>
       <LandingHeader />
@@ -288,6 +291,9 @@ const LandingPage = () => {
                     <LeftArrowIcon />
                   </SvgIcon>
                 }
+                onClick={() => {
+                  navigate("/signup");
+                }}
               >
                 Get started for free
               </Button>

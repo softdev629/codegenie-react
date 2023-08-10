@@ -6,6 +6,7 @@ import { authApi } from "./api/authApi";
 import genieReducer from "./features/genieSlice";
 import userReducer from "./features/userSlice";
 import { userApi } from "./api/userApi";
+import { genieApi } from "./api/genieApi";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [promptApi.reducerPath]: promptApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [genieApi.reducerPath]: genieApi.reducer,
     genieState: genieReducer,
     userState: userReducer,
   },
@@ -23,6 +25,7 @@ export const store = configureStore({
       promptApi.middleware,
       authApi.middleware,
       userApi.middleware,
+      genieApi.middleware,
     ]),
 });
 

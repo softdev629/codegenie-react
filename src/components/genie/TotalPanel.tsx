@@ -9,6 +9,8 @@ import {
   Divider,
   Tabs,
   Tab,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 
 import { ReactComponent as CopyIcon } from "../../assets/ico_copy.svg";
@@ -17,6 +19,7 @@ import { ReactComponent as ExportIcon } from "../../assets/ico_export.svg";
 import { useGetPromptNamesQuery } from "../../redux/api/promptApi";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { setPromptName } from "../../redux/features/genieSlice";
+import { useExportFileMutation } from "../../redux/api/genieApi";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,10 +51,24 @@ function a11yProps(index: number) {
   };
 }
 
-export default function TotalPanel() {
+export default function TotalPanel({
+  export_check,
+  export_text,
+  export_pdf,
+  export_word,
+}: {
+  export_check: string[];
+  export_text: string;
+  export_pdf: string;
+  export_word: string;
+}) {
   const [value, setValue] = useState(0);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const genieSelector = useAppSelector((state) => state.genieState);
   const dispatch = useAppDispatch();
+
+  const [exportFile, exportState] = useExportFileMutation();
 
   const promptsInfo = useGetPromptNamesQuery({
     product_name: "CodeGenie",
@@ -64,6 +81,23 @@ export default function TotalPanel() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [promptsInfo]);
+
+  useEffect(() => {
+    if (exportState.isSuccess) {
+      fetch(
+        `${process.env.REACT_APP_SERVER_ENDPOINT}/static/${exportState.data.path}`
+      )
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `${exportState.data.path}`);
+          document.body.appendChild(link);
+          link.click();
+        });
+    }
+  }, [exportState]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -174,12 +208,57 @@ export default function TotalPanel() {
                 }
                 variant="outlined"
                 color="inherit"
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  setAnchorEl(event.currentTarget);
+                }}
                 sx={(theme) => ({
                   borderColor: theme.palette.divider,
                 })}
               >
                 Export
               </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+              >
+                {export_check.includes("export_pdf") && (
+                  <MenuItem
+                    onClick={() => {
+                      exportFile({
+                        doc_type: "pdf",
+                        advice: genieSelector.msg,
+                      });
+                    }}
+                  >
+                    {export_pdf}
+                  </MenuItem>
+                )}
+                {export_check.includes("export_word") && (
+                  <MenuItem
+                    onClick={() => {
+                      exportFile({
+                        doc_type: "docx",
+                        advice: genieSelector.msg,
+                      });
+                    }}
+                  >
+                    {export_word}
+                  </MenuItem>
+                )}
+                {export_check.includes("export_text") && (
+                  <MenuItem
+                    onClick={() => {
+                      exportFile({
+                        doc_type: "txt",
+                        advice: genieSelector.msg,
+                      });
+                    }}
+                  >
+                    {export_text}
+                  </MenuItem>
+                )}
+              </Menu>
             </Stack>
           </Stack>
           <Divider />

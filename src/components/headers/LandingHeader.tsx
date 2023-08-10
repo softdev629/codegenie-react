@@ -12,7 +12,6 @@ import {
   MenuItem,
 } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { useCookies } from "react-cookie";
 
 import { ReactComponent as Logo } from "../../logo.svg";
 import { ReactComponent as ProductIcon } from "../../assets/ico_product.svg";
@@ -20,7 +19,7 @@ import { ReactComponent as DownIcon } from "../../assets/ico_downarr.svg";
 
 import { useLazyGetModulesQuery } from "../../redux/api/productApi";
 import { setModule } from "../../redux/features/genieSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 
 const LandingHeader = () => {
@@ -32,9 +31,6 @@ const LandingHeader = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const user = useAppSelector((state) => state.userState.user);
-
-  const [cookies] = useCookies(["logged_in"]);
 
   useEffect(() => {
     getModules("CodeGenie");
@@ -46,6 +42,7 @@ const LandingHeader = () => {
       setModules(getState.data.filter((item) => item !== ""));
       dispatch(setModule(getState.data[0]));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getState]);
 
   const open = Boolean(anchorEl);
@@ -202,27 +199,24 @@ const LandingHeader = () => {
                   height: "44px",
                 }}
                 onClick={() => {
-                  localStorage.setItem("module", "All Code");
-                  dispatch(setModule("All Code"));
-                  navigate("/codegenie/all_code");
+                  navigate("/signup");
                 }}
               >
                 Try Now
               </Button>
-              {!(cookies.logged_in || user) && (
-                <Button
-                  sx={{
-                    border: "1px solid #4BA5EB",
-                    padding: "12px 16px",
-                    height: "44px",
-                  }}
-                  onClick={() => {
-                    navigate("/signin");
-                  }}
-                >
-                  Sign In
-                </Button>
-              )}
+
+              <Button
+                sx={{
+                  border: "1px solid #4BA5EB",
+                  padding: "12px 16px",
+                  height: "44px",
+                }}
+                onClick={() => {
+                  navigate("/signin");
+                }}
+              >
+                Sign In
+              </Button>
             </Box>
           </Box>
         </Toolbar>
